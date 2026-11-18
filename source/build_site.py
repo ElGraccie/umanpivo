@@ -149,6 +149,39 @@ head = ('<link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type
         'else if(/^(spring|classic|autumn|winter|newyear)$/.test(p))t=p;d.setAttribute("data-theme",t)})()</script>')
 rep('<title>Уманьпиво. Концепт сайту</title>', '<title>Уманьпиво. Концепт сайту</title>' + head)
 
-os.makedirs(OUT, exist_ok=True)
-open(f'{OUT}/index.html', 'w', encoding='utf-8').write(s)
-print('built', len(s) // 1024, 'KB;', {t: len(v['l'].split()) for t, v in THEMES.items()})
+# ------------------------------------------------------------------ demo version (the one on GitHub)
+# python3 source/build_site.py                -> demo: watermark ДЕМО over the whole page, badge, noindex  -> <repo>/index.html
+# python3 source/build_site.py --clean FILE   -> clean site for the client after payment (keep it out of the public repo)
+CLEAN = '--clean' in sys.argv
+if not CLEAN:
+    import base64
+    rep('<title>Уманьпиво. Концепт сайту</title>', '<title>Демо · Уманьпиво. Концепт сайту</title><meta name="robots" content="noindex,nofollow">')
+    rep('<span>Це концепт редизайну.', '<span>Демо-версія сайту, підготовлена для ТОВ «Уманьпиво».</span>\n      <span>Це концепт редизайну.')
+    rep('</style>', '/* demo badge */\n.demo{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:55;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;'
+        'background:rgba(20,14,8,.82);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 11px/1 var(--f-body,system-ui);letter-spacing:.14em;text-transform:uppercase;color:#ffd66b;pointer-events:none}'
+        '.demo i{width:8px;height:8px;border-radius:50%;background:#ffc72c;box-shadow:0 0 0 3px rgba(255,199,44,.25)}'
+        'html:not(.adult) .demo,body.cart-open .demo{opacity:0}\n</style>')
+    rep('<!-- cart -->', '<div class="demo" role="note"><i></i>Демо-версія</div>\n<!-- cart -->')
+    # watermark: a tiled canvas (ДЕМО · DEMO · УМАНЬПИВО) + one big ДЕМО, in a closed shadow root, put back if removed or restyled.
+    # Text is two-tone (light fill, dark edge) so it shows on the dark and on the light sections. No CSS filter (iOS 26.4 bug).
+    wm = r"""(function(){var C=String.fromCharCode,T=C(1044,1045,1052,1054),S=' \u00b7 ',L=C(68,69,77,79),B=C(1059,1052,1040,1053,1068,1055,1048,1042,1054);
+function tile(){var c=document.createElement('canvas'),d=Math.min(2,window.devicePixelRatio||1),w=520,h=300;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.scale(d,d);x.translate(w/2,h/2);x.rotate(-0.42);x.textAlign='center';x.textBaseline='middle';
+x.font='800 64px Arial, sans-serif';x.lineWidth=1.6;x.strokeStyle='rgba(50,28,8,0.13)';x.strokeText(T,0,-34);x.fillStyle='rgba(255,255,255,0.11)';x.fillText(T,0,-34);
+x.font='700 20px Arial, sans-serif';x.fillStyle='rgba(50,28,8,0.12)';x.fillText(T+S+L+S+B,1,23);x.fillStyle='rgba(255,255,255,0.12)';x.fillText(T+S+L+S+B,0,22);return c.toDataURL('image/png')}
+var img=tile(),host=null,tag='x-'+Math.random().toString(36).slice(2,8);
+var css='position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;z-index:2147483647!important;pointer-events:none!important;display:block!important;opacity:1!important;visibility:visible!important;transform:none!important;filter:none!important;clip-path:none!important;margin:0!important;padding:0!important;';
+function make(){host=document.createElement(tag);host.setAttribute('style',css);host.setAttribute('aria-hidden','true');var r=host.attachShadow({mode:'closed'}),d=document.createElement('div');
+d.setAttribute('style','position:absolute;inset:0;background:url('+img+') repeat;background-size:520px 300px;pointer-events:none');
+var big=document.createElement('div');big.textContent=T;big.setAttribute('style','position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-24deg);font:900 min(34vw,320px)/1 Arial,sans-serif;letter-spacing:.04em;color:rgba(255,255,255,.07);-webkit-text-stroke:2px rgba(60,34,10,.1);white-space:nowrap;pointer-events:none;user-select:none');
+r.appendChild(d);r.appendChild(big);(document.body||document.documentElement).appendChild(host)}
+function ok(){return host&&host.isConnected&&host.getAttribute('style')===css}function fix(){if(!ok()){try{host&&host.remove()}catch(e){}make()}}
+function start(){make();new MutationObserver(fix).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['style','class','hidden']});setInterval(fix,1500)}
+if(document.body)start();else document.addEventListener('DOMContentLoaded',start)})();"""
+    b64 = base64.b64encode(wm.replace('\n', '').encode()).decode()
+    chunks = ','.join("'%s'" % b64[i:i + 76] for i in range(0, len(b64), 76))
+    rep('</body>', "<script>(function(q){try{var s=atob(q.join('')),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);(0,Function)(new TextDecoder().decode(u))()}catch(e){}})([%s]);</script>\n</body>" % chunks)
+
+dest = sys.argv[sys.argv.index('--clean') + 1] if CLEAN else f'{OUT}/index.html'
+os.makedirs(os.path.dirname(os.path.abspath(dest)), exist_ok=True)
+open(dest, 'w', encoding='utf-8').write(s)
+print('built', 'CLEAN' if CLEAN else 'DEMO', dest, len(s) // 1024, 'KB;', {t: len(v['l'].split()) for t, v in THEMES.items()})
