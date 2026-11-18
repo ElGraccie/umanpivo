@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="uk" data-theme="classic">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Демо · Сторінку не знайдено · Уманьпиво</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#1b1306">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'none'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+/* the 404 page can be served at any depth (/umanpivo/a/b/c), so links and icons are built from the site root, not relative */
+(function(){
+  var l=location,b='/';
+  if(l.protocol==='file:')b='';
+  else if(/\.github\.io$/.test(l.hostname)){var s=l.pathname.split('/')[1];b=s?'/'+s+'/':'/'}
+  window.UP_BASE=b;
+  ['favicon.ico|icon','favicon.svg|icon','apple-touch-icon.png|apple-touch-icon'].forEach(function(x){var p=x.split('|'),k=document.createElement('link');k.rel=p[1];k.href=b+p[0];document.head.appendChild(k)});
+  /* same season as the site: the visitor's choice, otherwise the date in Kyiv */
+  var d=document.documentElement,t='classic',p='auto';
+  try{p=localStorage.getItem('up-theme2')||'auto'}catch(e){}
+  if(/^(spring|classic|autumn|winter|newyear)$/.test(p))t=p;
+  else{var o=null;try{o={};new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Kyiv',month:'numeric',day:'numeric'}).formatToParts(new Date()).forEach(function(q){if(q.type!=='literal')o[q.type]=+q.value});if(!(o.month&&o.day))o=null}catch(e){o=null}
+    if(!o){var n=new Date();o={month:n.getMonth()+1,day:n.getDate()}}
+    var m=o.month,x=o.day;t=((m===12&&x>=30)||(m===1&&x<=5))?'newyear':(m===12||m===1||m===2)?'winter':(m>=9&&m<=11)?'autumn':(m>=3&&m<=5)?'spring':'classic'}
+  d.setAttribute('data-theme',t);
+})();
+</script>
+<style>
+:root{--amber:#ffc72c;--amber-2:#f6b627;--cream:#fff4dc;--f-display:"Geologica","Onest",system-ui,-apple-system,"Segoe UI",sans-serif;--f-body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --sky:linear-gradient(180deg,#27324f 0,#3f4868 18%,#76627a 34%,#b9786f 50%,#e29a5c 64%,#f2b56c 78%,#fbd496 92%,#fde4b4 100%);
+  --deep:#130d08;--sun:radial-gradient(circle,rgba(255,236,190,.95) 0,rgba(255,196,110,.7) 22%,rgba(255,160,70,.28) 46%,rgba(255,140,60,0) 70%);
+  --wood1:#7a4a26;--wood2:#5e3519;--lip:rgba(255,214,150,.75)}
+html[data-theme=spring]{--sky:linear-gradient(180deg,#2d6cb6 0,#4a88cf 16%,#78acdf 32%,#a8cbec 48%,#cfe3f2 62%,#e8f1f0 76%,#f6f6e8 90%,#fbf8ec 100%);--deep:#1f1520;
+  --sun:radial-gradient(circle,rgba(255,252,236,.88) 0,rgba(255,246,214,.7) 20%,rgba(255,240,190,.3) 44%,rgba(255,240,200,0) 68%);--wood1:#a9794a;--wood2:#8c5f36;--lip:rgba(255,244,228,.85)}
+html[data-theme=autumn]{--sky:linear-gradient(180deg,#363b55 0,#585470 16%,#8a6a74 32%,#c4856a 48%,#e8a35e 62%,#f4be78 76%,#fbd9a2 90%,#fde8bd 100%);--deep:#1a110a;
+  --sun:radial-gradient(circle,rgba(255,226,170,.95) 0,rgba(255,170,80,.66) 22%,rgba(240,120,50,.26) 46%,rgba(230,110,40,0) 70%)}
+html[data-theme=winter]{--sky:linear-gradient(180deg,#42608e 0,#6f86b4 16%,#a4a2c4 32%,#d6a8b4 47%,#efb59c 61%,#f8cd9f 75%,#fde3bf 90%,#feeed2 100%);--deep:#0e1620;
+  --sun:radial-gradient(circle,rgba(255,244,228,.95) 0,rgba(255,214,180,.6) 22%,rgba(240,180,170,.24) 46%,rgba(230,170,170,0) 70%);--wood1:#6e4a32;--wood2:#553624;--lip:rgba(255,240,230,.8)}
+html[data-theme=newyear]{--sky:linear-gradient(180deg,#070c22 0,#0d1638 22%,#16245a 44%,#24387a 64%,#3a4f92 82%,#56679e 100%);--deep:#0a1028;
+  --sun:radial-gradient(circle,rgba(236,242,255,.95) 0,rgba(200,214,255,.5) 18%,rgba(150,170,255,.18) 42%,rgba(140,160,255,0) 66%);--wood1:#5c3c28;--wood2:#47291a;--lip:rgba(220,230,255,.7)}
+
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--deep)}
+body{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;font-family:var(--f-body);color:var(--cream);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+
+/* ---------- scene: season sky, sun/moon, particles, table */
+.scene{position:relative;flex:none;height:clamp(330px,58svh,560px);background:var(--sky);overflow:hidden;isolation:isolate}
+.scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,8,4,.42) 0,rgba(12,8,4,.12) 30%,transparent 55%);pointer-events:none}
+.sun{position:absolute;left:50%;bottom:-6%;width:min(92vmin,760px);aspect-ratio:1;transform:translateX(-50%);background:var(--sun);border-radius:50%;z-index:0;animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{50%{transform:translateX(-50%) scale(1.04)}}
+.fx{position:absolute;inset:0;z-index:1;pointer-events:none}
+.fx i{position:absolute;top:-30px;display:block}
+
+/* the table the digits stand on */
+.table{position:relative;z-index:3;height:30px;margin-top:-30px;
+  background:linear-gradient(180deg,var(--lip) 0,var(--lip) 2px,transparent 3px),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.08) 0 2px,transparent 2px 140px),
+  linear-gradient(180deg,var(--wood1),var(--wood2));
+  box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.table::after{content:"";position:absolute;left:0;right:0;top:100%;height:120px;background:linear-gradient(180deg,rgba(0,0,0,.35),transparent);pointer-events:none}
+
+/* ---------- header */
+.top{position:absolute;left:0;right:0;top:0;z-index:6;display:flex;align-items:center;gap:16px;padding:18px clamp(16px,4vw,48px)}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--amber)}
+.logo .mk{height:34px;width:auto}
+.logo .wm{height:17px;width:auto}
+.top .sp{flex:1}
+.top .hot{font-size:14px;color:rgba(255,244,220,.85);text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.top .hot a{font-weight:600;text-decoration:none;color:#fff}
+.top .hot a:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- 4 [glass] 4 */
+.big{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;justify-content:center;align-items:flex-end;gap:clamp(4px,1.6vw,18px);
+  font:700 clamp(130px,27vw,330px)/.74 var(--f-display);letter-spacing:-.02em;user-select:none}
+.big .d{display:block;padding-bottom:.02em;background:linear-gradient(180deg,#ffe28a 0,var(--amber) 38%,var(--amber-2) 70%,#c9800f 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 .03em 0 rgba(90,50,8,.0);position:relative}
+.big .d::after{content:attr(data-d);position:absolute;left:0;top:0;z-index:-1;color:transparent;-webkit-text-stroke:.018em rgba(70,38,6,.45);transform:translateY(.02em)}
+.glass{display:block;height:.86em;width:auto;margin:0 .02em;overflow:visible}
+.glass .bub{animation:rise 3.4s linear infinite;opacity:0}
+.glass .bub:nth-of-type(2){animation-delay:-.9s;animation-duration:2.8s}.glass .bub:nth-of-type(3){animation-delay:-1.7s;animation-duration:3.9s}
+.glass .bub:nth-of-type(4){animation-delay:-2.4s}.glass .bub:nth-of-type(5){animation-delay:-.4s;animation-duration:3.1s}
+@keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.9}85%{opacity:.8}100%{transform:translateY(-34px);opacity:0}}
+.big .sh{position:absolute;left:50%;bottom:-2px;width:min(78vw,820px);height:26px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(10,4,0,.55),rgba(10,4,0,0));z-index:-1}
+
+/* ---------- text block */
+.msg{position:relative;z-index:4;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(34px,6vh,64px) 20px 54px}
+.eyebrow{font:600 12px/1 var(--f-body);letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin:0 0 14px}
+h1{font:700 clamp(30px,5vw,54px)/1.05 var(--f-display);letter-spacing:-.01em;margin:0 0 14px;color:#fff;text-wrap:balance}
+.msg p.lede{max-width:34em;margin:0 0 28px;font-size:clamp(16px,1.6vw,18px);line-height:1.55;color:rgba(255,244,220,.78);text-wrap:pretty}
+.acts{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 26px;border-radius:16px;font:600 16px/1 var(--f-body);text-decoration:none;transition:transform .2s,background .2s,border-color .2s}
+.btn.pri{background:var(--amber);color:#1b1304;box-shadow:0 14px 30px -14px rgba(255,199,44,.8)}
+.btn.pri:hover{background:#ffd34f;transform:translateY(-2px)}
+.btn.gh{border:1.5px solid rgba(255,244,220,.32);color:#fff;background:rgba(255,255,255,.04)}
+.btn.gh:hover{border-color:rgba(255,244,220,.7);background:rgba(255,255,255,.08);transform:translateY(-2px)}
+.btn svg{width:18px;height:18px}
+.note{margin:30px 0 0;font-size:14px;color:rgba(255,244,220,.55)}
+.note a{color:rgba(255,244,220,.9);font-weight:600;text-decoration:none}.note a:hover{text-decoration:underline;text-underline-offset:3px}
+.btn:focus-visible,.logo:focus-visible,.note a:focus-visible,.top a:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+
+@media (max-width:640px){
+  .top .hot{display:none}
+  .logo .mk{height:30px}.logo .wm{height:15px}
+  .scene{height:clamp(290px,46svh,420px)}
+  .big{font-size:40vw}
+  .btn{flex:1 1 100%;justify-content:center}
+  .acts{width:100%;max-width:380px}
+}
+@media (prefers-reduced-motion:reduce){.sun,.fx i,.glass .bub{animation:none!important}.fx{display:none}}
+
+/* ---------- season particles (no CSS filter anywhere: iOS 26.4 paints a black square for off-screen filters) */
+@keyframes fall{0%{transform:translate3d(0,0,0) rotate(0)}100%{transform:translate3d(var(--dx,40px),calc(58svh + 80px),0) rotate(var(--r,320deg))}}
+@keyframes float{0%,100%{transform:translate(0,0);opacity:.15}50%{transform:translate(var(--dx,20px),-26px);opacity:1}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.fx .pt{width:12px;height:8px;border-radius:60% 40% 60% 40%;animation:fall linear infinite}
+.fx .ff{top:auto;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle,#fff6b0 0,#ffd23c 38%,rgba(255,200,40,0) 72%);animation:float ease-in-out infinite}
+.fx .lf{width:18px;height:18px;animation:fall linear infinite}
+.fx .sn{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.92);animation:fall linear infinite}
+.garland{position:absolute;left:-2%;width:104%;top:62px;height:90px;z-index:1;pointer-events:none;display:none}
+html[data-theme=newyear] .garland{display:block}
+.garland i{position:absolute;width:12px;height:16px;border-radius:50% 50% 45% 45%;animation:blink 2.4s ease-in-out infinite}
+.garland i::before{content:"";position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle,var(--c) 0,transparent 70%);opacity:.55}
+
+/* demo badge */
+.demo{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:55;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:rgba(20,14,8,.82);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 11px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#ffd66b;pointer-events:none}.demo i{width:8px;height:8px;border-radius:50%;background:#ffc72c;box-shadow:0 0 0 3px rgba(255,199,44,.25)}.msg{padding-bottom:92px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="logo-year" viewBox="0 0 821 101"><path d="M82.4 97.614h12.88l13.347-67.712 20.138 70.424h2.71l22.795-70.524 10.426 67.812h21.416L171.205 2.712h-19.122l-15.314 53.835-14.107-53.835H90.237l14.319 12.185L82.4 97.614z"/><path d="M54.826 2.713l9.843 12.162-7.663 47.357c-2.588 15.583-9.498 26.706-17.363 26.706-4.745 0-7.994-3.26-7.994-8.41 0-6.37 5.15-8.95 12.06-8.95h6.92l1.485-2.568L32.059 2.713 0 2.688l12.763 12.188 21.055 50.73c-11.888.92-19.253 7.635-19.253 16.682 0 11.66 8.003 18.039 19.798 18.039 14.77 0 24.66-10.169 30.902-30.919L84.434 2.713H54.825h.001z"/><path d="M201.568 97.614l6.6-22.237h28.608l6.682 22.237h22.1l-29.42-94.902h-35.144l16.796 12.185-29.102 82.717h12.88zm20.819-70.143l11.542 38.416h-22.944l11.402-38.416zM323.182 44.5h-27.117V2.711h-33.326l12.309 12.185v82.717h21.017V54.535h27.117v43.079h21.01V2.712h-21.01V44.5zm79.43-10.326c-6.833 0-12.516.79-17.073 2.15V2.712h-33.318l12.308 12.185v52.076c0 19.797 13.557 33.353 33.355 33.353 19.653 0 33.207-11.582 33.207-34.816 0-18.344-11.519-31.337-28.479-31.337zm-5.718 56.93c-7.055 0-11.355-5.426-11.355-13.013V44.636c3.226-1.092 5.357-1.597 9.933-1.597 10.262 0 14.605 7.796 14.605 21.98 0 19.567-4.775 26.085-13.183 26.085zm50.079 9.386l5.788-1.432-1.35-4.884h20.522v-7.029h-27.196v5.436l2.236 7.909zm3.949-51.11V36.25l21.011 12.516V40.81l-21.368-12.218h-5.631v20.789h5.988zm9.438-47.727a6.477 6.477 0 0 0-1.374 1.447 11.169 11.169 0 0 0-1.058 1.89 8.715 8.715 0 0 0-2.271-2.648c-.932-.702-2.125-1.06-3.592-1.06h-.073a6.25 6.25 0 0 0-2.993.73c-.911.493-1.71 1.19-2.391 2.086-.682.906-1.21 1.973-1.582 3.224-.37 1.247-.558 2.624-.558 4.146 0 1.511.188 2.897.558 4.146.372 1.249.9 2.324 1.582 3.221.681.897 1.48 1.593 2.391 2.079a6.272 6.272 0 0 0 2.993.738h.073c1.467 0 2.659-.354 3.592-1.067a8.612 8.612 0 0 0 2.271-2.633c.62 1.464 1.443 2.598 2.472 3.408 1.025.81 2.361 1.215 4.009 1.215h.076c1.181 0 2.255-.274 3.223-.83.962-.553 1.793-1.317 2.483-2.296.696-.971 1.243-2.147 1.628-3.506.384-1.363.574-2.854.574-4.475 0-1.616-.19-3.113-.561-4.472-.371-1.365-.906-2.532-1.599-3.512-.69-.979-1.527-1.75-2.508-2.295-.972-.555-2.072-.83-3.277-.83h-.079c-.85 0-1.599.114-2.256.344a6.234 6.234 0 0 0-1.753.95zm-7.534 13.412c-.807 0-1.521-.32-2.135-.959-.617-.645-.917-1.525-.917-2.638 0-1.123.317-2.003.94-2.641.621-.638 1.348-.96 2.155-.96h.089c.915 0 1.679.322 2.278.984.602.652.902 1.523.902 2.617 0 1.084-.307 1.957-.921 2.616-.619.653-1.387.981-2.305.981h-.086zm10.927-7.842c.9 0 1.674.35 2.337 1.089.655.728.988 1.777.988 3.156 0 1.368-.333 2.43-.988 3.153-.663.73-1.437 1.1-2.337 1.1h-.087c-.951 0-1.725-.4-2.316-1.182-.588-.786-.878-1.803-.878-3.071 0-1.261.29-2.293.878-3.074.591-.791 1.365-1.171 2.316-1.171h.087zm-3.393 50.125a6.483 6.483 0 0 0-1.374 1.448c-.391.56-.749 1.188-1.058 1.89a8.72 8.72 0 0 0-2.271-2.649c-.932-.701-2.125-1.06-3.592-1.06h-.073a6.25 6.25 0 0 0-2.993.731c-.911.493-1.71 1.189-2.391 2.086-.682.906-1.21 1.973-1.582 3.223-.37 1.248-.558 2.624-.558 4.146 0 1.512.188 2.897.558 4.147.372 1.248.9 2.324 1.582 3.22.681.898 1.48 1.594 2.391 2.08a6.276 6.276 0 0 0 2.993.737h.073c1.467 0 2.659-.353 3.592-1.066a8.608 8.608 0 0 0 2.271-2.634c.62 1.464 1.443 2.598 2.472 3.409 1.025.81 2.361 1.215 4.009 1.215h.076c1.181 0 2.255-.274 3.223-.83.962-.553 1.793-1.317 2.483-2.296.696-.971 1.243-2.147 1.628-3.506.384-1.363.574-2.854.574-4.476 0-1.615-.19-3.113-.561-4.471-.371-1.365-.906-2.532-1.599-3.513-.69-.978-1.527-1.75-2.508-2.294-.972-.555-2.072-.831-3.277-.831h-.079c-.85 0-1.599.114-2.256.344a6.233 6.233 0 0 0-1.753.95zm-7.534 13.413c-.807 0-1.521-.321-2.135-.96-.617-.644-.917-1.524-.917-2.638 0-1.122.317-2.003.94-2.64.621-.639 1.348-.96 2.155-.96h.089c.915 0 1.679.321 2.278.984.602.652.902 1.523.902 2.616 0 1.085-.307 1.957-.921 2.617-.619.653-1.387.981-2.305.981h-.086zm10.927-7.843c.9 0 1.674.351 2.337 1.09.655.728.988 1.776.988 3.155 0 1.37-.333 2.43-.988 3.154-.663.73-1.437 1.1-2.337 1.1h-.087c-.951 0-1.725-.401-2.316-1.182-.588-.786-.878-1.804-.878-3.072 0-1.26.29-2.292.878-3.074.591-.79 1.365-1.17 2.316-1.17h.087zM784.904 0c-28.777 0-35.337 18.078-35.337 50.163 0 32.086 6.56 50.164 35.337 50.164 28.777 0 35.337-18.078 35.337-50.163 0-32.087-6.56-50.164-35.337-50.164zm0 91.17c-11.707 0-13.6-7.691-13.6-41.007 0-33.316 1.893-41.007 13.6-41.007 11.708 0 13.599 7.691 13.599 41.007 0 33.316-1.891 41.007-13.599 41.007zM481.889 3.235l12.234 10.917v83.462h20.901V12.673h25.616v84.94h20.89V3.236h-79.641zm171.463 94.379V3.234h-15.375l-33.974 51.717V3.235h-33.135l12.245 10.917v86.696h2.687l46.65-76.415v73.18h20.902zm56.992-60.068l29.429-31.612v-2.7h-78.429l12.234 10.918v52.99c0 19.69 13.752 33.17 33.84 33.17s32.352-13.29 32.352-33.881c0-19.67-12.108-31.301-29.426-28.884zm-4.579 53.594c-7.42 0-11.286-5.397-11.286-12.942V12.673h21.867L699.06 42.066v2.695c13.48-1.89 19.815 2.114 19.815 20.642 0 20.703-5.696 25.737-13.11 25.737z"/></symbol></svg>
+
+<div class="scene" aria-hidden="false">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="fx" id="fx" aria-hidden="true"></div>
+  <svg class="garland" id="garland" viewBox="0 0 1000 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 Q 83 74 167 14 Q 250 74 333 14 Q 417 74 500 14 Q 583 74 667 14 Q 750 74 833 14 Q 917 74 1000 14" fill="none" stroke="rgba(20,28,40,.85)" stroke-width="2.4" vector-effect="non-scaling-stroke"/></svg>
+  <header class="top">
+    <a class="logo" href="./" data-home aria-label="Уманьпиво, на головну"><svg class="mk" viewBox="0 0 115.4 118" fill="currentColor" aria-hidden="true"><path d="M115.4 115.4H0V0h115.4v115.4zM2 113.4h111.4V2H2v111.4z"/><path d="M84.8 26.3v2L71.9 72.9c-4.4 14.5-11.3 21.6-21.6 21.6-8.2 0-13.8-4.5-13.8-12.6 0-6.3 5.1-11 13.4-11.7L34.4 32.7l-3.8-4.4v-2h18.1l14 46.3-1 1.8h-4.9c-4.8 0-8.4 1.8-8.4 6.3 0 3.6 2.3 5.8 5.6 5.8 5.5 0 10.3-7.7 12.1-18.6l5.7-35.4-3.8-4.3v-1.9h16.8z"/></svg><svg class="wm" viewBox="0 0 821 101" fill="currentColor" aria-hidden="true"><use href="#logo-year" width="821" height="101"/></svg></a>
+    <div class="sp"></div>
+    <div class="hot">Гаряча лінія <a href="tel:+380800330909">0 800 33-09-09</a></div>
+  </header>
+  <div class="big" role="img" aria-label="404">
+    <span class="d" data-d="4">4</span>
+    <svg class="glass" viewBox="0 0 120 200" aria-hidden="true">
+      <defs>
+        <clipPath id="inner"><path d="M17 14 H103 L91 184 H29 Z"/></clipPath>
+        <linearGradient id="beer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf4a"/><stop offset="1" stop-color="#d98611"/></linearGradient>
+        <linearGradient id="gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".35" stop-color="#fff" stop-opacity=".05"/><stop offset=".8" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#fff" stop-opacity=".16"/></linearGradient>
+      </defs>
+      <ellipse cx="60" cy="196" rx="40" ry="4" fill="rgba(10,4,0,.45)"/>
+      <path d="M10 8 H110 L96 190 H24 Z" fill="url(#gl)"/>
+      <g clip-path="url(#inner)">
+        <rect x="0" y="152" width="120" height="40" fill="url(#beer)"/>
+        <path d="M0 152 Q 10 146 20 151 T 40 150 T 60 151 T 80 149 T 100 151 T 120 150 V 158 H0 Z" fill="#fff8e6"/>
+        <path d="M18 62 Q 40 68 60 63 T 102 62" stroke="#fff8e6" stroke-opacity=".55" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        <path d="M20 98 Q 44 104 62 99 T 100 97" stroke="#fff8e6" stroke-opacity=".38" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M23 126 Q 46 131 64 127 T 98 125" stroke="#fff8e6" stroke-opacity=".3" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <circle class="bub" cx="44" cy="182" r="1.8" fill="#fff6d8"/><circle class="bub" cx="58" cy="184" r="1.4" fill="#fff6d8"/><circle class="bub" cx="70" cy="181" r="2" fill="#fff6d8"/>
+        <circle class="bub" cx="52" cy="186" r="1.2" fill="#fff6d8"/><circle class="bub" cx="78" cy="185" r="1.5" fill="#fff6d8"/>
+      </g>
+      <path d="M10 8 H110 L96 190 H24 Z" fill="none" stroke="rgba(52,30,8,.42)" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M10 8 H110 L96 190 H24 Z" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="3.2" stroke-linejoin="round"/>
+      <path d="M24 190 H96 L95 196 H25 Z" fill="rgba(255,255,255,.35)"/>
+      <path d="M22 20 L31 176" stroke="#fff" stroke-opacity=".38" stroke-width="5" stroke-linecap="round"/>
+      <path d="M100 26 L95 92" stroke="#fff" stroke-opacity=".2" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span class="d" data-d="4">4</span>
+    <i class="sh"></i>
+  </div>
+</div>
+<div class="table" aria-hidden="true"></div>
+
+<main class="msg">
+  <p class="eyebrow">Помилка 404</p>
+  <h1>Цю сторінку вже випили</h1>
+  <p class="lede">Можливо, посилання застаріло або в адресі закралася помилка. Але пиво нікуди не поділося: воно чекає в каталозі.</p>
+  <div class="acts">
+    <a class="btn pri" href="./" data-home><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>На головну</a>
+    <a class="btn gh" href="./#catalog" data-home="#catalog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>До каталогу</a>
+  </div>
+  <p class="note">Не знайшли, що шукали? Гаряча лінія <a href="tel:+380800330909">0 800 33-09-09</a>, дзвінки безкоштовні.</p>
+</main>
+<div class="demo" role="note"><i></i>Демо-версія</div>
+<script>(function(q){try{var s=atob(q.join('')),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);(0,Function)(new TextDecoder().decode(u))()}catch(e){}})(['KGZ1bmN0aW9uKCl7dmFyIEM9U3RyaW5nLmZyb21DaGFyQ29kZSxUPUMoMTA0NCwxMDQ1LDEwNTIs','MTA1NCksUz0nIFx1MDBiNyAnLEw9Qyg2OCw2OSw3Nyw3OSksQj1DKDEwNTksMTA1MiwxMDQwLDEw','NTMsMTA2OCwxMDU1LDEwNDgsMTA0MiwxMDU0KTtmdW5jdGlvbiB0aWxlKCl7dmFyIGM9ZG9jdW1l','bnQuY3JlYXRlRWxlbWVudCgnY2FudmFzJyksZD1NYXRoLm1pbigyLHdpbmRvdy5kZXZpY2VQaXhl','bFJhdGlvfHwxKSx3PTUyMCxoPTMwMDtjLndpZHRoPXcqZDtjLmhlaWdodD1oKmQ7dmFyIHg9Yy5n','ZXRDb250ZXh0KCcyZCcpO3guc2NhbGUoZCxkKTt4LnRyYW5zbGF0ZSh3LzIsaC8yKTt4LnJvdGF0','ZSgtMC40Mik7eC50ZXh0QWxpZ249J2NlbnRlcic7eC50ZXh0QmFzZWxpbmU9J21pZGRsZSc7eC5m','b250PSc4MDAgNjRweCBBcmlhbCwgc2Fucy1zZXJpZic7eC5saW5lV2lkdGg9MS42O3guc3Ryb2tl','U3R5bGU9J3JnYmEoNTAsMjgsOCwwLjEzKSc7eC5zdHJva2VUZXh0KFQsMCwtMzQpO3guZmlsbFN0','eWxlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuMTEpJzt4LmZpbGxUZXh0KFQsMCwtMzQpO3guZm9udD0n','NzAwIDIwcHggQXJpYWwsIHNhbnMtc2VyaWYnO3guZmlsbFN0eWxlPSdyZ2JhKDUwLDI4LDgsMC4x','MiknO3guZmlsbFRleHQoVCtTK0wrUytCLDEsMjMpO3guZmlsbFN0eWxlPSdyZ2JhKDI1NSwyNTUs','MjU1LDAuMTIpJzt4LmZpbGxUZXh0KFQrUytMK1MrQiwwLDIyKTtyZXR1cm4gYy50b0RhdGFVUkwo','J2ltYWdlL3BuZycpfXZhciBpbWc9dGlsZSgpLGhvc3Q9bnVsbCx0YWc9J3gtJytNYXRoLnJhbmRv','bSgpLnRvU3RyaW5nKDM2KS5zbGljZSgyLDgpO3ZhciBjc3M9J3Bvc2l0aW9uOmZpeGVkIWltcG9y','dGFudDtpbnNldDowIWltcG9ydGFudDt3aWR0aDoxMDB2dyFpbXBvcnRhbnQ7aGVpZ2h0OjEwMHZo','IWltcG9ydGFudDt6LWluZGV4OjIxNDc0ODM2NDchaW1wb3J0YW50O3BvaW50ZXItZXZlbnRzOm5v','bmUhaW1wb3J0YW50O2Rpc3BsYXk6YmxvY2shaW1wb3J0YW50O29wYWNpdHk6MSFpbXBvcnRhbnQ7','dmlzaWJpbGl0eTp2aXNpYmxlIWltcG9ydGFudDt0cmFuc2Zvcm06bm9uZSFpbXBvcnRhbnQ7Zmls','dGVyOm5vbmUhaW1wb3J0YW50O2NsaXAtcGF0aDpub25lIWltcG9ydGFudDttYXJnaW46MCFpbXBv','cnRhbnQ7cGFkZGluZzowIWltcG9ydGFudDsnO2Z1bmN0aW9uIG1ha2UoKXtob3N0PWRvY3VtZW50','LmNyZWF0ZUVsZW1lbnQodGFnKTtob3N0LnNldEF0dHJpYnV0ZSgnc3R5bGUnLGNzcyk7aG9zdC5z','ZXRBdHRyaWJ1dGUoJ2FyaWEtaGlkZGVuJywndHJ1ZScpO3ZhciByPWhvc3QuYXR0YWNoU2hhZG93','KHttb2RlOidjbG9zZWQnfSksZD1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTtkLnNldEF0','dHJpYnV0ZSgnc3R5bGUnLCdwb3NpdGlvbjphYnNvbHV0ZTtpbnNldDowO2JhY2tncm91bmQ6dXJs','KCcraW1nKycpIHJlcGVhdDtiYWNrZ3JvdW5kLXNpemU6NTIwcHggMzAwcHg7cG9pbnRlci1ldmVu','dHM6bm9uZScpO3ZhciBiaWc9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnZGl2Jyk7YmlnLnRleHRD','b250ZW50PVQ7YmlnLnNldEF0dHJpYnV0ZSgnc3R5bGUnLCdwb3NpdGlvbjphYnNvbHV0ZTtsZWZ0','OjUwJTt0b3A6NTAlO3RyYW5zZm9ybTp0cmFuc2xhdGUoLTUwJSwtNTAlKSByb3RhdGUoLTI0ZGVn','KTtmb250OjkwMCBtaW4oMzR2dywzMjBweCkvMSBBcmlhbCxzYW5zLXNlcmlmO2xldHRlci1zcGFj','aW5nOi4wNGVtO2NvbG9yOnJnYmEoMjU1LDI1NSwyNTUsLjA3KTstd2Via2l0LXRleHQtc3Ryb2tl','OjJweCByZ2JhKDYwLDM0LDEwLC4xKTt3aGl0ZS1zcGFjZTpub3dyYXA7cG9pbnRlci1ldmVudHM6','bm9uZTt1c2VyLXNlbGVjdDpub25lJyk7ci5hcHBlbmRDaGlsZChkKTtyLmFwcGVuZENoaWxkKGJp','Zyk7KGRvY3VtZW50LmJvZHl8fGRvY3VtZW50LmRvY3VtZW50RWxlbWVudCkuYXBwZW5kQ2hpbGQo','aG9zdCl9ZnVuY3Rpb24gb2soKXtyZXR1cm4gaG9zdCYmaG9zdC5pc0Nvbm5lY3RlZCYmaG9zdC5n','ZXRBdHRyaWJ1dGUoJ3N0eWxlJyk9PT1jc3N9ZnVuY3Rpb24gZml4KCl7aWYoIW9rKCkpe3RyeXto','b3N0JiZob3N0LnJlbW92ZSgpfWNhdGNoKGUpe31tYWtlKCl9fWZ1bmN0aW9uIHN0YXJ0KCl7bWFr','ZSgpO25ldyBNdXRhdGlvbk9ic2VydmVyKGZpeCkub2JzZXJ2ZShkb2N1bWVudC5kb2N1bWVudEVs','ZW1lbnQse2NoaWxkTGlzdDp0cnVlLHN1YnRyZWU6dHJ1ZSxhdHRyaWJ1dGVzOnRydWUsYXR0cmli','dXRlRmlsdGVyOlsnc3R5bGUnLCdjbGFzcycsJ2hpZGRlbiddfSk7c2V0SW50ZXJ2YWwoZml4LDE1','MDApfWlmKGRvY3VtZW50LmJvZHkpc3RhcnQoKTtlbHNlIGRvY3VtZW50LmFkZEV2ZW50TGlzdGVu','ZXIoJ0RPTUNvbnRlbnRMb2FkZWQnLHN0YXJ0KX0pKCk7']);</script>
+<script>
+(function(){
+  var b=window.UP_BASE||'';
+  [].forEach.call(document.querySelectorAll('[data-home]'),function(a){a.href=(b||'index.html')+(a.getAttribute('data-home')||'')});
+  /* season particles */
+  var t=document.documentElement.getAttribute('data-theme'),fx=document.getElementById('fx'),R=Math.random,h='';
+  function rnd(a,c){return a+R()*(c-a)}
+  var LEAF='<svg viewBox="0 0 24 24"><path d="M12 2c3 4 9 5 9 11a9 9 0 0 1-18 0c0-6 6-7 9-11z" fill="%C%"/><path d="M12 6v15" stroke="rgba(60,25,5,.45)" stroke-width="1.2"/></svg>';
+  if(t==='spring'){for(var i=0;i<16;i++)h+='<i class="pt" style="left:'+rnd(0,100)+'%;background:'+['#fbe2ea','#f6c4d4','#ffffff','#f2aec4'][i%4]+';--dx:'+rnd(-60,90)+'px;animation-duration:'+rnd(9,17)+'s;animation-delay:-'+rnd(0,17)+'s"></i>'}
+  else if(t==='classic'){for(var i=0;i<18;i++)h+='<i class="ff" style="left:'+rnd(4,96)+'%;top:'+rnd(30,92)+'%;--dx:'+rnd(-30,30)+'px;animation-duration:'+rnd(3,6)+'s;animation-delay:-'+rnd(0,6)+'s"></i>'}
+  else if(t==='autumn'){for(var i=0;i<12;i++)h+='<i class="lf" style="left:'+rnd(0,100)+'%;--dx:'+rnd(-80,80)+'px;--r:'+rnd(200,520)+'deg;animation-duration:'+rnd(10,18)+'s;animation-delay:-'+rnd(0,18)+'s">'+LEAF.replace('%C%',['#d9772b','#c4501f','#e8a234','#a63e1c'][i%4])+'</i>'}
+  else{for(var i=0;i<(t==='newyear'?34:40);i++){var s=rnd(3,7);h+='<i class="sn" style="left:'+rnd(0,100)+'%;width:'+s+'px;height:'+s+'px;opacity:'+rnd(.5,1)+';--dx:'+rnd(-40,40)+'px;animation-duration:'+rnd(8,16)+'s;animation-delay:-'+rnd(0,16)+'s"></i>'}}
+  fx.innerHTML=h;
+  if(t==='newyear'){
+    /* bulbs sit on the six swags of the wire: y = 14 + 120·t·(1-t) inside each swag (viewBox 1000×90 → 1:1 in px vertically) */
+    var g=document.getElementById('garland'),C=['#ff5a5a','#ffd23c','#6ad06a','#5ab4ff','#ff8ad8'],out='',SW=1000/6,N=Math.max(12,Math.min(30,Math.round(innerWidth/46)));
+    for(var k=0;k<N;k++){var x=(k+.5)*1000/N,tt=(x%SW)/SW,y=14+120*tt*(1-tt);
+      out+='<i style="left:calc('+(-2+x/1000*104)+'% - 6px);top:'+(62+y-1)+'px;background:'+C[k%5]+';--c:'+C[k%5]+';animation-delay:-'+rnd(0,2.4).toFixed(2)+'s"></i>'}
+    var w=document.createElement('div');w.className='garland';w.style.cssText='display:block;left:0;width:100%;top:0;height:200px';w.innerHTML=out;g.parentNode.insertBefore(w,g.nextSibling);
+  }
+})();
+</script>
+</body>
+</html>

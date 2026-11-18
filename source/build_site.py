@@ -179,9 +179,24 @@ function start(){make();new MutationObserver(fix).observe(document.documentEleme
 if(document.body)start();else document.addEventListener('DOMContentLoaded',start)})();"""
     b64 = base64.b64encode(wm.replace('\n', '').encode()).decode()
     chunks = ','.join("'%s'" % b64[i:i + 76] for i in range(0, len(b64), 76))
-    rep('</body>', "<script>(function(q){try{var s=atob(q.join('')),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);(0,Function)(new TextDecoder().decode(u))()}catch(e){}})([%s]);</script>\n</body>" % chunks)
+    DEMO_SCRIPT = "<script>(function(q){try{var s=atob(q.join('')),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);(0,Function)(new TextDecoder().decode(u))()}catch(e){}})([%s]);</script>" % chunks
+    rep('</body>', DEMO_SCRIPT + '\n</body>')
 
 dest = sys.argv[sys.argv.index('--clean') + 1] if CLEAN else f'{OUT}/index.html'
 os.makedirs(os.path.dirname(os.path.abspath(dest)), exist_ok=True)
 open(dest, 'w', encoding='utf-8').write(s)
-print('built', 'CLEAN' if CLEAN else 'DEMO', dest, len(s) // 1024, 'KB;', {t: len(v['l'].split()) for t, v in THEMES.items()})
+# ------------------------------------------------------------------ 404 page (GitHub Pages serves 404.html for any missing address)
+page = open(f'{SRC}/404.html', encoding='utf-8').read()
+page = page.replace('%LOGO_SYMBOL%', re.search(r'<symbol id="logo-year".*?</symbol>', s, re.S).group(0))
+if CLEAN:
+    page = page.replace('%TITLE%', 'Сторінку не знайдено · Уманьпиво').replace('%DEMO_CSS%', '').replace('%DEMO_BODY%', '')
+else:
+    page = (page.replace('%TITLE%', 'Демо · Сторінку не знайдено · Уманьпиво')
+            .replace('%DEMO_CSS%', '.demo{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:55;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;'
+                     'background:rgba(20,14,8,.82);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 11px/1 var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:#ffd66b;pointer-events:none}'
+                     '.demo i{width:8px;height:8px;border-radius:50%;background:#ffc72c;box-shadow:0 0 0 3px rgba(255,199,44,.25)}.msg{padding-bottom:92px}')
+            .replace('%DEMO_BODY%', '<div class="demo" role="note"><i></i>Демо-версія</div>\n' + DEMO_SCRIPT))
+assert '%' + 'TITLE%' not in page and '%DEMO' not in page
+open(os.path.join(os.path.dirname(os.path.abspath(dest)), '404.html'), 'w', encoding='utf-8').write(page)
+
+print('built', 'CLEAN' if CLEAN else 'DEMO', dest, '+ 404.html (%d KB)' % (len(page) // 1024), len(s) // 1024, 'KB;', {t: len(v['l'].split()) for t, v in THEMES.items()})
