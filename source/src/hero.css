@@ -1,0 +1,113 @@
+/* ================= hero v13: themed scene, layers are baked WebP files ================= */
+.hero{--th:190px;--lh:clamp(280px,36vw,540px);--sd:clamp(250px,30vw,470px);padding-bottom:0;background:var(--hbg,#1a1410)}
+.sky{contain:layout paint style;transition:opacity .2s ease}
+.sky>*{position:absolute;pointer-events:none}
+.sky .sk{inset:0 0 calc(var(--th) - 40px) 0;background:var(--sky)}
+.sky .cl{border-radius:50%;opacity:.7;animation:cdrift 80s ease-in-out infinite alternate}
+.sky .c1{left:26%;bottom:calc(var(--th) + var(--lh) * 1.02);width:48%;height:64px;background:radial-gradient(closest-side,var(--c1),transparent)}
+.sky .c2{left:56%;bottom:calc(var(--th) + var(--lh) * 1.3);width:44%;height:50px;background:radial-gradient(closest-side,var(--c2),transparent);animation-duration:110s}
+@keyframes cdrift{to{transform:translateX(40px)}}
+/* baked image layers fade in once decoded */
+.ly{display:block;max-width:none;-webkit-user-drag:none;user-select:none;opacity:0;transition:opacity .7s ease}
+.ly.in{opacity:1}
+.sky .sun{left:60%;bottom:calc(var(--th) + var(--lh) * .1 + var(--sd) / 2);width:calc(var(--sd) * 3.617);height:calc(var(--sd) * 3.617);translate:-50% 50%}
+.sky .far,.sky .mid,.sky .fshade{left:-3%;width:106%;bottom:calc(var(--th) - 50px);height:var(--lh)}
+.sky .far,.sky .mid{object-fit:cover;object-position:50% 100%}
+.sky .fshade{background:var(--fshade,none)}
+.sky .haze{left:0;right:0;bottom:calc(var(--th) - 50px);height:calc(var(--lh) * .85);background:var(--haze)}
+.sky .bloom{left:60%;bottom:calc(var(--th) + var(--lh) * .1 + var(--sd) / 2);width:1000px;height:1000px;translate:-50% 50%;border-radius:50%;background:radial-gradient(circle,rgba(var(--bl),.34) 0,rgba(var(--bl2),.15) 28%,transparent 62%)}
+.sky .fgb,.sky .fga{inset:0;width:100%;height:100%;object-fit:cover}
+.sky .bok{left:0;width:100%;bottom:calc(var(--th) - 50px);height:calc(var(--lh) * 1.5);object-fit:cover;object-position:50% 100%}
+.sky .mist{left:0;right:0;bottom:calc(var(--th) - 10px);height:100px;background:linear-gradient(0deg,var(--mist),transparent)}
+/* table */
+.sky .table{left:0;right:0;bottom:0;height:var(--th);background:linear-gradient(180deg,#8a5c34,#6b4224 60%,#3b2210);box-shadow:0 -14px 30px -6px rgba(0,0,0,.5)}
+.table img{position:absolute}
+.table .tbl{inset:0;width:100%;height:100%}
+.table .tshade{right:0;top:0;width:50%;height:100%;object-fit:cover;object-position:100% 50%;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%);mask-image:linear-gradient(90deg,transparent 0,#000 38%);animation:shade 8s ease-in-out infinite alternate}
+@keyframes shade{from{translate:-7px 0}to{translate:8px 0}}
+.table::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(0deg,#0f1912,rgba(15,25,18,0))}
+.sky .vig{inset:0;background:var(--vig)}
+/* particles live only in the theme that owns them */
+.fx{inset:0;display:none}
+.fx i,.fx svg{position:absolute;display:block}
+/* snow: 28 flakes, transform-only animation */
+.fx-snow i{top:-16px;left:var(--l);width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(255,255,255,.88) 42%,rgba(255,255,255,0) 72%);opacity:var(--o);animation:snow var(--t) linear var(--dl) infinite}
+@keyframes snow{0%{transform:translate3d(0,-20px,0)}100%{transform:translate3d(var(--sw),calc(var(--H,100vh) + 40px),0)}}
+/* autumn leaves */
+.fx-leaves svg{top:-40px;opacity:.9;animation:fall linear infinite}
+@keyframes fall{0%{transform:translate3d(0,-30px,0) rotate(0)}25%{transform:translate3d(40px,calc(var(--H,100vh) * .22),0) rotate(90deg)}50%{transform:translate3d(-30px,calc(var(--H,100vh) * .48),0) rotate(210deg)}75%{transform:translate3d(46px,calc(var(--H,100vh) * .74),0) rotate(300deg)}100%{transform:translate3d(-10px,calc(var(--H,100vh) + 40px),0) rotate(420deg)}}
+/* fireflies (summer evening) */
+.fx-fly i{left:var(--x);bottom:calc(var(--th) + var(--lh) * var(--y));width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,#fffbd0 0,rgba(255,236,150,.85) 30%,rgba(255,200,90,.28) 62%,rgba(255,190,80,0) 100%);animation:ffd var(--t) ease-in-out var(--dl) infinite,ffb var(--b) ease-in-out var(--dl) infinite}
+@keyframes ffd{0%,100%{translate:0 0}25%{translate:var(--ax) var(--ay)}50%{translate:var(--bx) var(--by)}75%{translate:var(--cx) var(--cy)}}
+@keyframes ffb{0%,100%{opacity:.15}45%,60%{opacity:1}}
+/* bottles stand on the table */
+.stage{margin-bottom:calc(var(--th) * .7 - 46px);z-index:2}
+.hero-grid>div:first-child{align-self:start}
+.lede{max-width:23em}
+.plate{background:var(--plate);backdrop-filter:none;-webkit-backdrop-filter:none}
+.hero .tag{background:rgba(255,255,255,.88);backdrop-filter:none;-webkit-backdrop-filter:none}
+.pt{transform:translateX(-50%) rotate(calc(var(--rot,0deg) * .22))}
+.pt::before,.pt::after{content:"";position:absolute;pointer-events:none;border-radius:50%;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s}
+.pt::before{left:50%;bottom:-7px;width:calc(var(--h) * var(--k) * var(--ar,.3) * 1.05);height:15px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(8,3,0,.95) 0,rgba(8,3,0,.55) 55%,rgba(8,3,0,0) 74%);z-index:-1}
+.pt::after{left:calc(50% + var(--sx,0px) * 2.4);bottom:-16px;width:calc(var(--h) * var(--k) * var(--ar,.3) * 2.8);height:34px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(10,4,0,.6) 0,rgba(10,4,0,.28) 50%,rgba(10,4,0,0) 72%);z-index:-2}
+.pt .bt{transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .45s;filter:drop-shadow(0 0 14px rgba(var(--glow),.5)) drop-shadow(0 0 0 rgba(0,0,0,0))}
+.pt:hover .bt,.pt:focus-visible .bt{transform:translateY(-38px) translateX(calc(var(--px,0) * var(--d,6) * 1px)) rotateY(calc(var(--px,0) * 7deg));filter:drop-shadow(0 0 24px rgba(var(--glow),.75)) drop-shadow(0 26px 16px rgba(0,0,0,.32))}
+.pt:hover::before,.pt:focus-visible::before{transform:translateX(-50%) scale(.62);opacity:.55}
+.pt:hover::after,.pt:focus-visible::after{transform:translateX(-50%) scale(.72);opacity:.4}
+.pt .tag,.pt .dot,.pt .stem{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.pt:hover .tag,.pt:hover .dot,.pt:hover .stem,.pt:focus-visible .tag,.pt:focus-visible .dot,.pt:focus-visible .stem{transform:translateY(-38px)}
+.bt .refl{display:block;opacity:.22}
+/* shading and light on the glass: plain alpha, no blend modes */
+.bt::before{mix-blend-mode:normal;background:
+  linear-gradient(90deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 42%,rgba(28,10,0,.46) 66%,rgba(20,6,0,.66) 100%),
+  linear-gradient(0deg,rgba(15,6,0,.4),rgba(15,6,0,0) 26%)}
+.bt::after{mix-blend-mode:normal;opacity:.72;background:
+  linear-gradient(90deg,transparent calc(var(--sp) - 3.5%),rgba(255,255,255,.5) var(--sp),transparent calc(var(--sp) + 4%)),
+  linear-gradient(112deg,transparent 10%,rgba(var(--hl),.5) 17%,rgba(var(--hl),.5) 21%,transparent 28%),
+  linear-gradient(112deg,transparent 56%,rgba(var(--hl),.34) 62%,rgba(var(--hl),.34) 66%,transparent 72%),
+  linear-gradient(90deg,transparent 24%,rgba(255,176,70,.5) 30%,transparent 40%),
+  linear-gradient(180deg,rgba(255,236,190,.4),transparent 20%)}
+/* cold-bottle condensation */
+.bt .cs{display:block;position:absolute;inset:0;left:0;bottom:auto;top:0;width:100%;height:100%;transform:none;filter:none;z-index:2;opacity:.45;pointer-events:none;
+  -webkit-mask-image:var(--m);mask-image:var(--m);-webkit-mask-size:100% 100%;mask-size:100% 100%;background:%DROPS%}
+.beams{position:absolute;left:-14%;right:-6%;top:-4%;bottom:-8%;z-index:0;pointer-events:none;background:
+    linear-gradient(122deg,transparent 4%,rgba(var(--beam),.2) 9%,rgba(var(--beam),.2) 15%,transparent 20%),
+    linear-gradient(122deg,transparent 30%,rgba(var(--beam),.15) 35%,rgba(var(--beam),.15) 44%,transparent 49%),
+    linear-gradient(122deg,transparent 57%,rgba(var(--beam),.18) 61%,rgba(var(--beam),.18) 67%,transparent 72%);
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 36%,#000 50%,#000 86%,transparent 100%),linear-gradient(90deg,transparent 0,#000 18%,#000 82%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(180deg,transparent 0,transparent 36%,#000 50%,#000 86%,transparent 100%),linear-gradient(90deg,transparent 0,#000 18%,#000 82%,transparent 100%);mask-composite:intersect;
+  animation:beams 9s ease-in-out infinite alternate}
+@keyframes beams{from{translate:-14px 0;opacity:.78}to{translate:16px 0;opacity:1}}
+/* branch over half of the table */
+.fgC{position:absolute;right:-1%;bottom:0;width:clamp(520px,70vw,1020px);aspect-ratio:980/215;z-index:3;pointer-events:none}
+.fgC img{position:absolute;left:-3.06%;top:-13.95%;width:106.12%;height:127.9%}
+/* still life on the table and garland (themes that have them) */
+.sky .garland,.sky .gl{left:34%;top:56px;width:72%;height:auto}
+/* theme switcher */
+.themes{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:14px;max-width:520px}
+.themes .th-l{font:600 11px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:rgba(255,244,222,.78);text-shadow:0 1px 6px rgba(0,0,0,.5);margin-right:3px}
+.themes button{appearance:none;border:1px solid rgba(255,255,255,.3);background:rgba(14,10,8,.42);color:rgba(255,244,222,.96);font:500 12.5px/1 var(--f-body);padding:7px 10px;border-radius:999px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.themes button:hover{background:rgba(14,10,8,.6)}
+.themes button[aria-pressed=true]{background:var(--amber);border-color:var(--amber);color:#1b1304}
+.themes .fxb{margin-left:4px;border-style:dashed}
+.themes .fxb[aria-pressed=true]{background:rgba(14,10,8,.5);border-style:solid;border-color:var(--amber);color:#ffd66b}
+.themes .fxb[aria-pressed=true]:hover{background:rgba(14,10,8,.68)}
+.hero.swap .sky,.hero.swap .fgC{opacity:0}
+.fgC{transition:opacity .2s ease}
+/* low-power and paused states */
+html[data-fx=lite] .hero *,html[data-fx=lite] .hero *::before,html[data-fx=lite] .hero *::after{animation:none!important}
+html[data-fx=lite] .fx{display:none!important}
+html[data-fx=lite] .pt .bt{filter:none}
+html[data-fx=lite] .bt::after{opacity:.6}
+.hero.off *,.hero.off *::before,.hero.off *::after{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){.hero *,.hero *::before,.hero *::after{animation:none!important}.fx{display:none!important}.pt .bt,.pt::before,.pt::after,.pt .tag,.pt .dot,.pt .stem{transition:none}}
+@media (max-width:980px){.hero{--th:150px}.hero-grid>div:first-child{align-self:auto}.sky .vig{background:var(--vigm,var(--vig))}}
+@media (max-width:700px){.sky .fgb{display:none}.fgC{width:104vw;right:-2%}.fx-snow i:nth-child(n+15){display:none}.fx-leaves svg:nth-child(n+6){display:none}.sky .garland,.sky .gl{left:6%;width:110%}.themes{max-width:none}}
+@media (max-width:560px){.hero{--th:120px}.sky .sun{left:62%}.sky .bloom{display:none}.beams{display:none}.fx-fly i:nth-child(n+6){display:none}.themes .fxb{margin-left:0}}
+/* closed cart drawer must not paint anything (Safari can draw it as a square) */
+.drawer{visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s linear .3s}
+body.cart-open .drawer{visibility:visible;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s}
+
+/* price tags of neighbouring bottles are nudged apart instead of overlapping (phones, small tablets) */
+@media (max-width:560px){.pt .tag{translate:calc(var(--o,0) * max(0px,116px - 19vw)) 0}.tag b{font-size:12px}}
+@media (max-width:350px){.tag{font-size:10px;padding:4px 7px}.tag b{font-size:11px}.pt .tag{translate:calc(var(--o,0) * 46px) 0}}
+@media (min-width:561px) and (max-width:980px){.pt.edge .tag{translate:0 16px}.pt:not(.edge) .tag{translate:calc(var(--o,0) * 15px) 0}}
