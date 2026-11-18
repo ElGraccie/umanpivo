@@ -9,7 +9,7 @@ R = random.Random(315)
 W, H = 1600, 520
 SUNX = 960
 
-FAR = [('0', '#c9b4d4'), ('.35', '#a59cc4'), ('1', '#7f86ac')]                 # lilac hills in the haze
+FAR = [('0', '#c4dbd9'), ('.35', '#a3c2b6'), ('1', '#7fa38d')]                 # far green hills in the daylight haze
 MID = [('0', '#f4dce6'), ('.08', '#b9c98e'), ('.3', '#5f8a4c'), ('1', '#22381f')]   # sunlit orchard, green shade below
 GREENS = ['#6f9a4e', '#86ad57', '#5c8642', '#9cbc63', '#4f7a3c']
 PINKS = ['#f6c4d4', '#f9d7e2', '#efa9c0', '#fbe6ee', '#ffffff', '#e894b0']
@@ -229,8 +229,8 @@ def branch():
     return svg, bigsvg
 
 
-SUN_DISC = 'radial-gradient(circle at 46% 42%,#ffffff 0,#fffaf0 40%,#fff1d6 66%,rgba(255,236,200,.9) 82%,rgba(255,230,190,0) 100%)'
-SUN_HALO = 'radial-gradient(circle,rgba(255,246,228,.9) 0,rgba(255,232,214,.5) 12%,rgba(255,214,222,.24) 28%,rgba(240,200,230,.1) 44%,rgba(230,200,230,0) 60%)'
+SUN_DISC = 'radial-gradient(circle at 46% 42%,#ffffff 0,#fffbe8 40%,#fff3c4 66%,rgba(255,240,180,.9) 82%,rgba(255,236,170,0) 100%)'
+SUN_HALO = 'radial-gradient(circle,rgba(255,252,236,.95) 0,rgba(255,246,206,.55) 12%,rgba(255,240,190,.24) 28%,rgba(255,240,200,.08) 44%,rgba(255,240,200,0) 60%)'
 
 
 def main():

@@ -10,6 +10,8 @@
 /* baked image layers fade in once decoded */
 .ly{display:block;max-width:none;-webkit-user-drag:none;user-select:none;opacity:0;transition:opacity .7s ease}
 .ly.in{opacity:1}
+/* layers the current theme does not have stay out of layout: an empty <img> can be drawn with a thin frame */
+.ly[hidden]{display:none!important}
 .sky .sun{left:60%;bottom:calc(var(--th) + var(--lh) * .1 + var(--sd) / 2);width:calc(var(--sd) * 3.617);height:calc(var(--sd) * 3.617);translate:-50% 50%}
 .sky .far,.sky .mid,.sky .fshade{left:-3%;width:106%;bottom:calc(var(--th) - 50px);height:var(--lh)}
 .sky .far,.sky .mid{object-fit:cover;object-position:50% 100%}
