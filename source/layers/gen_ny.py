@@ -142,14 +142,17 @@ def lighten(c, k=.55):
     r, g, b = hex2rgb(c)
     return '#%02x%02x%02x' % (int(r + (255 - r) * k), int(g + (255 - g) * k), int(b + (255 - b) * k))
 
-# ---------------- garland (frame 1200x210)
-GW, GH = 1200, 210
+# ---------------- garland: frame 1770x210 = from -3% to 103% of the hero width (CSS: left:-3%;width:106%),
+# so the strand runs across the whole screen; the last swag leaves the frame on the right
+GW, GH = 1770, 210
+NSWAG = 6
 def garland():
     rr = random.Random(5)
-    anchors = [(-40, 26), (300, 14), (650, 26), (1000, 14), (1250, 28)]
-    sags = [96, 104, 98, 92]
+    anchors = [(-40 + 350 * i, 26 if i % 2 == 0 else 14) for i in range(NSWAG + 1)]
+    anchors[-1] = (anchors[-1][0], 28)
+    sags = [96, 104, 98, 92, 100, 96]
     wire = 'M%s %s' % (f1(anchors[0][0]), f1(anchors[0][1])); bulbs = []
-    for i in range(4):
+    for i in range(NSWAG):
         p0, p3 = anchors[i], anchors[i + 1]; dx = p3[0] - p0[0]
         c1 = (p0[0] + dx * .22, p0[1] + sags[i] * 1.18); c2 = (p0[0] + dx * .78, p3[1] + sags[i] * 1.18)
         wire += ' C%s %s %s %s %s %s' % (f1(c1[0]), f1(c1[1]), f1(c2[0]), f1(c2[1]), f1(p3[0]), f1(p3[1]))
@@ -168,6 +171,12 @@ def garland():
             f1(bx), f1(by), col[1:], f1(bx), f1(by), lighten(col, .5), f1(tl * 57), f1(bx), f1(by), f1(bx - 1), f1(by - 2)))
     mk = lambda inner: '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d"><defs>%s</defs>%s</svg>' % (GW, GH, GW, GH, halo_defs('hg'), inner)
     return mk(base), [mk(''.join(s)) for s in sets]
+
+def bake_garland(b, sizes):
+    gbase, gsets = garland()
+    sizes['garland'] = save(shot(b, gbase, GW, GH), OUT + '/garland.webp', q=82, aq=88)
+    for i, g in enumerate(gsets):
+        sizes['gl%d' % (i + 1)] = save(shot(b, g, GW, GH), OUT + '/gl%d.webp' % (i + 1), scale=.6, q=76, aq=85)
 
 # ---------------- branch (frame 980x215) with baubles and lights
 BW, BH = 980, 215
@@ -307,14 +316,14 @@ def main():
         sizes['branch'] = save(shot(b, wrap(c1 + bigsvg), 980 + 2 * B, 215 + 2 * B), OUT + '/branch.webp', q=82, aq=88)
         for i, g in enumerate(glows):
             sizes['bgl%d' % (i + 1)] = save(shot(b, wrap('<div style="position:absolute;inset:0;filter:blur(1.2px)">' + g + '</div>'), 980 + 2 * B, 215 + 2 * B), OUT + '/bgl%d.webp' % (i + 1), scale=.6, q=76, aq=85)
-        # garland
-        gbase, gsets = garland()
-        sizes['garland'] = save(shot(b, gbase, GW, GH), OUT + '/garland.webp', q=82, aq=88)
-        for i, g in enumerate(gsets):
-            sizes['gl%d' % (i + 1)] = save(shot(b, g, GW, GH), OUT + '/gl%d.webp' % (i + 1), scale=.6, q=76, aq=85)
-        # props
-        sizes['props'] = save(shot(b, props(), 560, 300), OUT + '/props.webp', scale=.75, q=82, aq=88)
+        bake_garland(b, sizes)
     print({k: (v[0] // 1024, v[1]) for k, v in sizes.items()}, 'TOTAL KB', sum(v[0] for v in sizes.values()) // 1024)
 
 if __name__ == '__main__':
-    main()
+    if sys.argv[1:] == ['garland']:          # re-bake only the garland layers
+        with browser() as b:
+            s = {}
+            bake_garland(b, s)
+            print({k: (v[0] // 1024, v[1]) for k, v in s.items()})
+    else:
+        main()

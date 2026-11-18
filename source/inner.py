@@ -167,7 +167,10 @@ def css():
            '.sdeco i{position:absolute;inset:0;background-repeat:repeat-x;background-position:0 0}']
     for th, p in SEASONS.items():
         s = 'html[data-theme=%s]' % th
-        out.append('%s{--deep:%s;--sand:%s;--hop:%s}' % (s, p['deep'], p['sand'], p['hop']))
+        # --hf = rgb of the colour the next section (.lines-sec) starts with: the hero fades into exactly this
+        first = p['lines'].split()[0].lstrip('#')
+        hf = ','.join(str(int(first[i:i + 2], 16)) for i in (0, 2, 4))
+        out.append('%s{--deep:%s;--sand:%s;--hop:%s;--hf:%s}' % (s, p['deep'], p['sand'], p['hop'], hf))
         out.append('%s .lines-sec{background:linear-gradient(180deg,%s)}' % (s, p['lines']))
         out.append('%s .lines-sec .a{background:%s}%s .lines-sec .b{background:%s}%s .lines-sec .c{background:%s}' % (s, p['orb'][0], s, p['orb'][1], s, p['orb'][2]))
         out.append('%s .market{background:%s,linear-gradient(180deg,%s 0%%,%s 55%%,%s 100%%);background-size:240px 240px,auto}' % (s, PAT[th], p['sand'], p['paper'], p['sand']))

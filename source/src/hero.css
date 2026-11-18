@@ -1,5 +1,5 @@
 /* ================= hero v13: themed scene, layers are baked WebP files ================= */
-.hero{--th:190px;--lh:clamp(280px,36vw,540px);--sd:clamp(250px,30vw,470px);padding-bottom:0;background:var(--hbg,#1a1410)}
+.hero{--th:190px;--fh:calc(var(--th) * .72);--lh:clamp(280px,36vw,540px);--sd:clamp(250px,30vw,470px);padding-bottom:0;background:var(--hbg,#1a1410)}
 .sky{contain:layout paint style;transition:opacity .2s ease}
 .sky>*{position:absolute;pointer-events:none}
 .sky .sk{inset:0 0 calc(var(--th) - 40px) 0;background:var(--sky)}
@@ -25,8 +25,15 @@
 .table .tbl{inset:0;width:100%;height:100%}
 .table .tshade{right:0;top:0;width:50%;height:100%;object-fit:cover;object-position:100% 50%;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%);mask-image:linear-gradient(90deg,transparent 0,#000 38%);animation:shade 8s ease-in-out infinite alternate}
 @keyframes shade{from{translate:-7px 0}to{translate:8px 0}}
-.table::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(0deg,#0f1912,rgba(15,25,18,0))}
+/* hero -> next section: the scene sinks into the colour the next section starts with (--hf = its r,g,b, set per theme).
+   Drawn above the vignette, so the last pixel row of the hero is exactly the section background. */
+.sky::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fh);pointer-events:none;background:linear-gradient(180deg,rgba(var(--hf,15,25,18),0) 0,rgba(var(--hf,15,25,18),.14) 22%,rgba(var(--hf,15,25,18),.42) 46%,rgba(var(--hf,15,25,18),.76) 72%,rgb(var(--hf,15,25,18)) 100%)}
 .sky .vig{inset:0;background:var(--vig)}
+/* ...and the next section starts the same way: its blurred orbs would otherwise begin with a hard line right under the hero */
+.lines-sec{isolation:isolate}
+.lines-sec .orb{z-index:0}
+.lines-sec::before{content:"";position:absolute;left:0;right:0;top:0;height:150px;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgb(var(--hf,15,25,18)) 0,rgba(var(--hf,15,25,18),.8) 28%,rgba(var(--hf,15,25,18),.42) 58%,rgba(var(--hf,15,25,18),.12) 84%,rgba(var(--hf,15,25,18),0) 100%)}
+.lines-sec .wrap{z-index:2}
 /* particles live only in the theme that owns them */
 .fx{inset:0;display:none}
 .fx i,.fx svg{position:absolute;display:block}
@@ -78,10 +85,13 @@
   animation:beams 9s ease-in-out infinite alternate}
 @keyframes beams{from{translate:-14px 0;opacity:.78}to{translate:16px 0;opacity:1}}
 /* branch over half of the table */
-.fgC{position:absolute;right:-1%;bottom:0;width:clamp(520px,70vw,1020px);aspect-ratio:980/215;z-index:3;pointer-events:none}
-.fgC img{position:absolute;left:-3.06%;top:-13.95%;width:106.12%;height:127.9%}
+.fgC{--fw:clamp(520px,70vw,1020px);--fgb:0px;position:absolute;right:-1%;bottom:var(--fgb);width:var(--fw);aspect-ratio:980/215;z-index:3;pointer-events:none;
+  /* the image sticks out 13.95% of the box below the box edge, so the hero edge sits at 89.093% (+ the lift --fgb) of the image height;
+     the bottom --fh dissolves with the same steps as .sky::after (alpha = 1 - fade), so the branch sinks into the same colour */
+  --fgm:linear-gradient(180deg,#000 calc(89.093% + var(--fgb) - var(--fh)),rgba(0,0,0,.86) calc(89.093% + var(--fgb) - var(--fh) * .78),rgba(0,0,0,.58) calc(89.093% + var(--fgb) - var(--fh) * .54),rgba(0,0,0,.24) calc(89.093% + var(--fgb) - var(--fh) * .28),rgba(0,0,0,0) calc(89.093% + var(--fgb)))}
+.fgC img{position:absolute;left:-3.06%;top:-13.95%;width:106.12%;height:127.9%;-webkit-mask-image:var(--fgm);mask-image:var(--fgm)}
 /* still life on the table and garland (themes that have them) */
-.sky .garland,.sky .gl{left:34%;top:56px;width:72%;height:auto}
+.sky .garland,.sky .gl{left:-3%;top:56px;width:106%;height:auto}
 /* theme switcher */
 .themes{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:14px;max-width:520px}
 .themes .th-l{font:600 11px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:rgba(255,244,222,.78);text-shadow:0 1px 6px rgba(0,0,0,.5);margin-right:3px}
@@ -100,9 +110,9 @@ html[data-fx=lite] .pt .bt{filter:none}
 html[data-fx=lite] .bt::after{opacity:.6}
 .hero.off *,.hero.off *::before,.hero.off *::after{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){.hero *,.hero *::before,.hero *::after{animation:none!important}.fx{display:none!important}.pt .bt,.pt::before,.pt::after,.pt .tag,.pt .dot,.pt .stem{transition:none}}
-@media (max-width:980px){.hero{--th:150px}.hero-grid>div:first-child{align-self:auto}.sky .vig{background:var(--vigm,var(--vig))}}
-@media (max-width:700px){.sky .fgb{display:none}.fgC{width:104vw;right:-2%}.fx-snow i:nth-child(n+15){display:none}.fx-leaves svg:nth-child(n+6){display:none}.sky .garland,.sky .gl{left:6%;width:110%}.themes{max-width:none}}
-@media (max-width:560px){.hero{--th:120px}.sky .sun{left:62%}.sky .bloom{display:none}.beams{display:none}.fx-fly i:nth-child(n+6){display:none}.themes .fxb{margin-left:0}}
+@media (max-width:980px){.bar{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(22,14,8,.84)}.hero{--th:150px}.hero-grid>div:first-child{align-self:auto}.sky .vig{background:var(--vigm,var(--vig))}}
+@media (max-width:700px){.sky .fgb{display:none}.fgC{--fw:104vw;right:-2%}.sky .cl{animation:none}.fx-snow i:nth-child(n+15){display:none}.fx-leaves svg:nth-child(n+6){display:none}.sky .garland,.sky .gl{left:-3%;width:162%}.themes{max-width:none}}
+@media (max-width:560px){.hero{--th:120px;--fh:calc(var(--th) * .45)}.fgC{--fgb:34px}.sky .sun{left:62%}.sky .bloom{display:none}.beams{display:none}.fx-fly i:nth-child(n+6){display:none}.themes .fxb{margin-left:0}}
 /* closed cart drawer must not paint anything (Safari can draw it as a square) */
 .drawer{visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s linear .3s}
 body.cart-open .drawer{visibility:visible;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s}
