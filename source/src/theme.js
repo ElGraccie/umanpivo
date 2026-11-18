@@ -49,14 +49,16 @@
     });
     cur=t;
   }
+  /* only the last choice wins: a slow theme that finishes loading after a later click must not be painted */
+  var req=0;
   function apply(p,first){
     pref=p;if(!first)LS.set('up-theme2',p);sync();
-    var t=resolve(p);
+    var t=resolve(p),my=++req;
     if(first){paint(t);return}
-    if(t===cur)return;
+    if(t===cur){hero.classList.remove('swap');return}
     hero.classList.add('swap');
     var t0=Date.now();
-    load(t,function(){setTimeout(function(){paint(t);requestAnimationFrame(function(){hero.classList.remove('swap')})},Math.max(0,210-(Date.now()-t0)))});
+    load(t,function(){if(my!==req)return;setTimeout(function(){if(my!==req)return;paint(t);requestAnimationFrame(function(){hero.classList.remove('swap')})},Math.max(0,210-(Date.now()-t0)))});
   }
   btns.forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-th'))})});
   /* ---- effects: full / lite ---- */

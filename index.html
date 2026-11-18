@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Уманьпиво. Концепт сайту</title><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#1b1306"><script>(function(){var d=document.documentElement,t="classic",p="auto";try{p=localStorage.getItem("up-theme2")||"auto"}catch(e){}if(p==="auto"){var z=["Europe/Kyiv","Europe/Kiev"],o=null,i;for(i=0;i<z.length&&!o;i++){try{o={};new Intl.DateTimeFormat("en-US",{timeZone:z[i],year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).forEach(function(q){if(q.type!=="literal")o[q.type]=+q.value});if(!(o.month&&o.day))o=null}catch(e){o=null}}if(!o){var n=new Date();o={month:n.getMonth()+1,day:n.getDate()}}var m=o.month,x=o.day;t=((m===12&&x>=30)||(m===1&&x<=5))?"newyear":(m===12||m===1||m===2)?"winter":(m>=9&&m<=11)?"autumn":(m>=3&&m<=5)?"spring":"classic"}else if(/^(spring|classic|autumn|winter|newyear)$/.test(p))t=p;d.setAttribute("data-theme",t)})()</script>
+<title>Уманьпиво. Концепт сайту</title><link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#1b1306"><meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'none'"><meta name="referrer" content="strict-origin-when-cross-origin"><script>(function(){var d=document.documentElement,t="classic",p="auto";try{p=localStorage.getItem("up-theme2")||"auto"}catch(e){}if(p==="auto"){var z=["Europe/Kyiv","Europe/Kiev"],o=null,i;for(i=0;i<z.length&&!o;i++){try{o={};new Intl.DateTimeFormat("en-US",{timeZone:z[i],year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).forEach(function(q){if(q.type!=="literal")o[q.type]=+q.value});if(!(o.month&&o.day))o=null}catch(e){o=null}}if(!o){var n=new Date();o={month:n.getMonth()+1,day:n.getDate()}}var m=o.month,x=o.day;t=((m===12&&x>=30)||(m===1&&x<=5))?"newyear":(m===12||m===1||m===2)?"winter":(m>=9&&m<=11)?"autumn":(m>=3&&m<=5)?"spring":"classic"}else if(/^(spring|classic|autumn|winter|newyear)$/.test(p))t=p;d.setAttribute("data-theme",t)})()</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
@@ -452,6 +452,8 @@ body.cart-open .drawer{transform:none}
 .bbt .bs{position:absolute;left:2px;right:2px;bottom:30px;height:52px;display:flex;justify-content:center;align-items:flex-end;z-index:1}
 .bbt .bs img{height:52px;width:auto;margin:0 -6px}
 .bbt .bx{position:absolute;left:50%;bottom:0;height:58px;width:auto;transform:translateX(-50%);z-index:2}
+html.lock,html.lock body{overflow:hidden}
+a.tel{color:inherit;text-decoration:none}a.tel:hover{text-decoration:underline;text-underline-offset:3px}
 /* ================= hero v13: themed scene, layers are baked WebP files ================= */
 .hero{--th:190px;--fh:calc(var(--th) * .72);--lh:clamp(280px,36vw,540px);--sd:clamp(250px,30vw,470px);padding-bottom:0;background:var(--hbg,#1a1410)}
 .sky{contain:layout paint style;transition:opacity .2s ease}
@@ -709,7 +711,7 @@ html[data-fx=lite] .sdeco i{animation:none!important;opacity:.7}html[data-fx=lit
       <a href="#visit">Магазини і доставка</a>
     </nav>
     <div class="sp"></div>
-    <div class="hot">Гаряча лінія <b class="num">0 800 33-09-09</b></div>
+    <div class="hot">Гаряча лінія <a class="num tel" href="tel:+380800330909"><b>0 800 33-09-09</b></a></div>
     <button class="cartbtn" id="openCart" aria-label="Відкрити кошик">Кошик <span class="n num" id="cartN">0</span></button>
   </div>
 </div>
@@ -788,14 +790,16 @@ html[data-fx=lite] .sdeco i{animation:none!important;opacity:.7}html[data-fx=lit
     });
     cur=t;
   }
+  /* only the last choice wins: a slow theme that finishes loading after a later click must not be painted */
+  var req=0;
   function apply(p,first){
     pref=p;if(!first)LS.set('up-theme2',p);sync();
-    var t=resolve(p);
+    var t=resolve(p),my=++req;
     if(first){paint(t);return}
-    if(t===cur)return;
+    if(t===cur){hero.classList.remove('swap');return}
     hero.classList.add('swap');
     var t0=Date.now();
-    load(t,function(){setTimeout(function(){paint(t);requestAnimationFrame(function(){hero.classList.remove('swap')})},Math.max(0,210-(Date.now()-t0)))});
+    load(t,function(){if(my!==req)return;setTimeout(function(){if(my!==req)return;paint(t);requestAnimationFrame(function(){hero.classList.remove('swap')})},Math.max(0,210-(Date.now()-t0)))});
   }
   btns.forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-th'))})});
   /* ---- effects: full / lite ---- */
@@ -959,7 +963,7 @@ html[data-fx=lite] .sdeco i{animation:none!important;opacity:.7}html[data-fx=lit
         <p>Умань, Родниківка, Городецьке.</p>
         <p><b>При замовленні на сайті</b> безкоштовно. Якщо замовляти по телефону, то до 500 грн доставка 30 грн, а понад 500 грн безкоштовно.</p>
         <p>Пн–Пт з 14:00 до 22:00, Сб–Нд з 10:00 до 22:00.</p>
-        <span class="big num">(077) 10-10-066</span>
+        <a class="big num tel" href="tel:+380771010066">(077) 10-10-066</a>
       </div>
       <div class="pane">
         <h3>Доставка по Україні</h3>
@@ -985,8 +989,8 @@ html[data-fx=lite] .sdeco i{animation:none!important;opacity:.7}html[data-fx=lit
     <div>
       <h4>Зв'язок</h4>
       <ul>
-        <li><span class="num">0 800 33-09-09</span> (безкоштовно по Україні, Пн–Пт 08:00–17:00)</li>
-        <li><span class="num">(077) 10-10-066</span> (доставка по Умані)</li>
+        <li><a class="num tel" href="tel:+380800330909">0 800 33-09-09</a> (безкоштовно по Україні, Пн–Пт 08:00–17:00)</li>
+        <li><a class="num tel" href="tel:+380771010066">(077) 10-10-066</a> (доставка по Умані)</li>
         <li>info@umanpivo.ua</li>
       </ul>
     </div>
@@ -1014,7 +1018,7 @@ html[data-fx=lite] .sdeco i{animation:none!important;opacity:.7}html[data-fx=lit
   <div class="foot">
     <div class="t num"><span>Разом</span><span id="total">0 ₴</span></div>
     <button class="btn fill" id="checkout">Оформити замовлення</button>
-    <div class="concept" id="concept"><b>Це концепт сайту.</b> Оплата тут не підключена і замовлення нікуди не надсилається. Щоб замовити зараз, зателефонуйте на <b class="num">0 800 33-09-09</b> або відкрийте umanpivo.ua.</div>
+    <div class="concept" id="concept"><b>Це концепт сайту.</b> Оплата тут не підключена і замовлення нікуди не надсилається. Щоб замовити зараз, зателефонуйте на <a class="num tel" href="tel:+380800330909"><b>0 800 33-09-09</b></a> або відкрийте umanpivo.ua.</div>
   </div>
 </aside>
 
@@ -1311,7 +1315,7 @@ var NOTES={
 };
 var DINFO={
   ua:'<b>Нова пошта</b> на відділення, дорога 1–4 дні. Оплата карткою. Тут усе, що відправляємо по Україні: пиво, сидри, лимонади, квас, набори й мерч.',
-  uman:'<b>Кур’єр по Умані, Родниківці й Городецькому.</b> Безкоштовно при замовленні на сайті. Тут є розлив, снеки й мінеральна вода. Телефон <b class="num">(077) 10-10-066</b>, Пн–Пт 14:00–22:00, Сб–Нд 10:00–22:00.'
+  uman:'<b>Кур’єр по Умані, Родниківці й Городецькому.</b> Безкоштовно при замовленні на сайті. Тут є розлив, снеки й мінеральна вода. Телефон <a class="num tel" href="tel:+380771010066"><b>(077) 10-10-066</b></a>, Пн–Пт 14:00–22:00, Сб–Нд 10:00–22:00.'
 };
 var st={mode:'ua',cat:'beer',color:'all',vol:'all',grp:'all',sort:'def',q:''};
 function cur(){return st.mode==='uman'?U:P}
@@ -1327,9 +1331,12 @@ function drawTabs(){
     return '<button class="tab" role="tab" data-cat="'+c[0]+'" aria-selected="'+(c[0]===st.cat)+'"><span class="ti" style="--t:'+((rep&&rep.lq)||'#e8a21a')+'">'+(rep?'<img src="'+IMG[rep.ph]+'" alt="">':'')+'</span><span class="tt"><b>'+c[1]+'</b><small class="num">'+(CNT()[c[0]]||0)+' позицій</small></span></button>';
   }).join('');
 }
+/* search folds apostrophes (' ’ ʼ) and Latin look-alike letters (the brand writes УМАNСЬКЕ), so a typed query finds the item */
+var FOLD={a:'а',b:'в',c:'с',e:'е',h:'н',i:'і',k:'к',m:'м',n:'н',o:'о',p:'р',t:'т',x:'х',y:'у'};
+function fold(s){return String(s).toLowerCase().replace(/[\u0027\u2019\u2018\u02bc\u0060\u00b4]/g,'\u02bc').replace(/[abcehikmnoptxy]/g,function(c){return FOLD[c]}).replace(/\s+/g,' ').trim()}
 function pool(){
-  var q=st.q.trim().toLowerCase(),L=cur();
-  return q?L.filter(function(p){return (p.n+' '+(p.t||'')).toLowerCase().indexOf(q)>-1}):L.filter(function(p){return p.c===st.cat});
+  var q=fold(st.q),L=cur();
+  return q?L.filter(function(p){return fold(p.n+' '+(p.t||'')).indexOf(q)>-1}):L.filter(function(p){return p.c===st.cat});
 }
 function drawFilters(list){
   var q=st.q.trim();
@@ -1470,15 +1477,17 @@ function drawCart(){
   var oth=other?'<div class="xmode">У кошику є ще '+other+' поз. для доставки '+(um?'по Україні':'по Умані')+'. <button class="lnk" data-mode="'+(um?'ua':'uman')+'">Показати</button></div>':'';
   $('#lines').innerHTML=head+body+oth;
   $('#checkout').disabled=!v.length;
-  $('#concept').innerHTML='<b>Це концепт сайту.</b> Оплата тут не підключена і замовлення нікуди не надсилається. '+(um?'Щоб замовити доставку по Умані зараз, зателефонуйте на <b class="num">(077) 10-10-066</b> або відкрийте umanpivo.ua.':'Щоб замовити зараз, зателефонуйте на <b class="num">0 800 33-09-09</b> або відкрийте umanpivo.ua.');
+  $('#concept').innerHTML='<b>Це концепт сайту.</b> Оплата тут не підключена і замовлення нікуди не надсилається. '+(um?'Щоб замовити доставку по Умані зараз, зателефонуйте на <a class="num tel" href="tel:+380771010066"><b>(077) 10-10-066</b></a> або відкрийте umanpivo.ua.':'Щоб замовити зараз, зателефонуйте на <a class="num tel" href="tel:+380800330909"><b>0 800 33-09-09</b></a> або відкрийте umanpivo.ua.');
 }
 $('#lines').addEventListener('click',function(e){
   var b=e.target.closest('[data-q]');if(!b)return;
   var i=+b.dataset.i;cart[i].qty+=+b.dataset.q;if(cart[i].qty<1)cart.splice(i,1);drawCart();
 });
 document.addEventListener('click',function(e){var b=e.target.closest('[data-add]');if(b)addToCart(+b.dataset.add)});
-function openCart(){document.body.classList.add('cart-open');$('#drawer').setAttribute('aria-hidden','false');$('#closeCart').focus()}
-function closeCart(){document.body.classList.remove('cart-open');$('#drawer').setAttribute('aria-hidden','true');$('#concept').classList.remove('on');$('#openCart').focus()}
+/* while the 18+ gate or the cart is open, the page behind can't be reached with Tab or clicks and doesn't scroll */
+function behind(on){['.top','main','footer'].forEach(function(s){var e=$(s);if(!e)return;e.inert=on;if(on)e.setAttribute('aria-hidden','true');else e.removeAttribute('aria-hidden')});document.documentElement.classList.toggle('lock',on)}
+function openCart(){document.body.classList.add('cart-open');$('#drawer').setAttribute('aria-hidden','false');behind(true);$('#closeCart').focus()}
+function closeCart(){document.body.classList.remove('cart-open');$('#drawer').setAttribute('aria-hidden','true');$('#concept').classList.remove('on');behind(false);$('#openCart').focus()}
 $('#openCart').addEventListener('click',openCart);
 $('#closeCart').addEventListener('click',closeCart);
 $('#veil').addEventListener('click',closeCart);
@@ -1536,9 +1545,9 @@ var dm='ua';try{dm=sessionStorage.getItem('dmode')==='uman'?'uman':'ua'}catch(e)
 setMode(dm);
 
 /* ---------------- age gate ---------------- */
-$('#ageYes').addEventListener('click',function(){try{sessionStorage.setItem('adult','1')}catch(e){}document.documentElement.classList.add('adult')});
+$('#ageYes').addEventListener('click',function(){try{sessionStorage.setItem('adult','1')}catch(e){}document.documentElement.classList.add('adult');behind(false)});
 $('#ageNo').addEventListener('click',function(){$('#gateT').textContent='Вибачте';$('#gateP').textContent='Сайт доступний лише повнолітнім. Повертайтеся, коли вам виповниться 18.';$('#gateB').style.display='none'});
-if(!document.documentElement.classList.contains('adult'))$('#ageYes').focus();
+if(!document.documentElement.classList.contains('adult')){behind(true);$('#ageYes').focus()}
 })();
 </script>
 </body>

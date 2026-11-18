@@ -141,6 +141,8 @@ rep('<div class="market scal">', '<div class="market scal"><div class="sdeco" ar
 # ------------------------------------------------------------------ head: favicons, early theme
 head = ('<link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">'
         '<link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#1b1306">'
+        '<meta http-equiv="Content-Security-Policy" content="object-src \'none\'; base-uri \'self\'; form-action \'none\'">'
+        '<meta name="referrer" content="strict-origin-when-cross-origin">'
         '<script>(function(){var d=document.documentElement,t="classic",p="auto";try{p=localStorage.getItem("up-theme2")||"auto"}catch(e){}'
         'if(p==="auto"){var z=["Europe/Kyiv","Europe/Kiev"],o=null,i;for(i=0;i<z.length&&!o;i++){try{o={};new Intl.DateTimeFormat("en-US",{timeZone:z[i],year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).forEach(function(q){if(q.type!=="literal")o[q.type]=+q.value});if(!(o.month&&o.day))o=null}catch(e){o=null}}'
         'if(!o){var n=new Date();o={month:n.getMonth()+1,day:n.getDate()}}var m=o.month,x=o.day;t=((m===12&&x>=30)||(m===1&&x<=5))?"newyear":(m===12||m===1||m===2)?"winter":(m>=9&&m<=11)?"autumn":(m>=3&&m<=5)?"spring":"classic"}'
