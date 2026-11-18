@@ -42,6 +42,7 @@
 @keyframes snow{0%{transform:translate3d(0,-20px,0)}100%{transform:translate3d(var(--sw),calc(var(--H,100vh) + 40px),0)}}
 /* autumn leaves */
 .fx-leaves svg{top:-40px;opacity:.9;animation:fall linear infinite}
+.fx-petals svg{top:-30px;opacity:.92;animation:fall linear infinite}
 @keyframes fall{0%{transform:translate3d(0,-30px,0) rotate(0)}25%{transform:translate3d(40px,calc(var(--H,100vh) * .22),0) rotate(90deg)}50%{transform:translate3d(-30px,calc(var(--H,100vh) * .48),0) rotate(210deg)}75%{transform:translate3d(46px,calc(var(--H,100vh) * .74),0) rotate(300deg)}100%{transform:translate3d(-10px,calc(var(--H,100vh) + 40px),0) rotate(420deg)}}
 /* fireflies (summer evening) */
 .fx-fly i{left:var(--x);bottom:calc(var(--th) + var(--lh) * var(--y));width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,#fffbd0 0,rgba(255,236,150,.85) 30%,rgba(255,200,90,.28) 62%,rgba(255,190,80,0) 100%);animation:ffd var(--t) ease-in-out var(--dl) infinite,ffb var(--b) ease-in-out var(--dl) infinite}
@@ -53,21 +54,26 @@
 .lede{max-width:23em}
 .plate{background:var(--plate);backdrop-filter:none;-webkit-backdrop-filter:none}
 .hero .tag{background:rgba(255,255,255,.88);backdrop-filter:none;-webkit-backdrop-filter:none}
-.pt{transform:translateX(-50%) rotate(calc(var(--rot,0deg) * .22))}
+/* bottles stand on the table: --pbp is the empty strip under the glass in the photo (measured in JS), the bottle sinks by it,
+   so the glass touches the table and the contact shadows sit right under it */
+.pt{--pbp:calc(var(--h) * var(--k) * var(--pbf,.04));bottom:calc(var(--b,0px) + 46px - var(--pbp));transform:translateX(-50%) rotate(calc(var(--rot,0deg) * .22))}
 .pt::before,.pt::after{content:"";position:absolute;pointer-events:none;border-radius:50%;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s}
-.pt::before{left:50%;bottom:-7px;width:calc(var(--h) * var(--k) * var(--ar,.3) * 1.05);height:15px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(8,3,0,.95) 0,rgba(8,3,0,.55) 55%,rgba(8,3,0,0) 74%);z-index:-1}
-.pt::after{left:calc(50% + var(--sx,0px) * 2.4);bottom:-16px;width:calc(var(--h) * var(--k) * var(--ar,.3) * 2.8);height:34px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(10,4,0,.6) 0,rgba(10,4,0,.28) 50%,rgba(10,4,0,0) 72%);z-index:-2}
+.pt::before{left:50%;bottom:calc(var(--pbp) - 6px);width:calc(var(--h) * var(--k) * var(--ar,.3) * 1.12);height:13px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(6,2,0,.92) 0,rgba(6,2,0,.62) 50%,rgba(6,2,0,0) 100%);z-index:-1}
+.pt::after{left:calc(50% + var(--sx,0px) * 2.4);bottom:calc(var(--pbp) - 17px);width:calc(var(--h) * var(--k) * var(--ar,.3) * 2.6);height:36px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(10,4,0,.62) 0,rgba(10,4,0,.32) 50%,rgba(10,4,0,0) 100%);z-index:-2}
 .pt .bt{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 /* glow behind a bottle: a gradient, not a CSS filter. A filter on an element that is below the first screen makes iOS 26.4 Safari
    (and Safari 26.4 on macOS) paint a black square in the corner of the page (WebKit bug 314999); on a phone the bottles start below the first screen. */
-.pt .gw{display:block;position:absolute;inset:-5% -55%;z-index:-1;pointer-events:none;border-radius:50%;opacity:.8;transition:opacity .45s,transform .45s cubic-bezier(.2,.8,.2,1);background:radial-gradient(closest-side,rgba(var(--glow),.36) 0,rgba(var(--glow),.27) 24%,rgba(var(--glow),.14) 52%,rgba(var(--glow),.05) 78%,rgba(var(--glow),0) 100%)}
-.pt:hover .gw,.pt:focus-visible .gw{opacity:1;transform:scale(1.1)}
+.pt .gw{display:none}
+/* glow behind the bottle under the pointer: one element per bottle, behind every bottle (z-index 0), shown by JS on hover/focus */
+.pglow{position:absolute;left:var(--x);bottom:calc(var(--b,0px) + 46px);width:calc(var(--h) * var(--k) * var(--ar,.3) * 3.4);height:calc(var(--h) * var(--k) * 1.12);z-index:0;pointer-events:none;opacity:0;transform:translate(-50%,6%) scale(.6);transition:opacity .45s,transform .45s cubic-bezier(.2,.8,.2,1);background:radial-gradient(closest-side,rgba(255,244,212,.9) 0,rgba(255,208,110,.74) 22%,rgba(255,180,70,.42) 46%,rgba(255,160,50,.15) 70%,rgba(255,150,40,0) 100%)}
+.pglow.on{opacity:1;transform:translate(-50%,calc(6% - 38px)) scale(1)}
+html[data-fx=lite] .pglow{transition:opacity .2s}
 .pt:hover .bt,.pt:focus-visible .bt{transform:translateY(-38px) translateX(calc(var(--px,0) * var(--d,6) * 1px)) rotateY(calc(var(--px,0) * 7deg))}
 .pt:hover::before,.pt:focus-visible::before{transform:translateX(-50%) scale(.62);opacity:.55}
 .pt:hover::after,.pt:focus-visible::after{transform:translateX(-50%) scale(.72);opacity:.4}
 .pt .tag,.pt .dot,.pt .stem{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 .pt:hover .tag,.pt:hover .dot,.pt:hover .stem,.pt:focus-visible .tag,.pt:focus-visible .dot,.pt:focus-visible .stem{transform:translateY(-38px)}
-.bt .refl{display:block;opacity:.22}
+.bt .refl{display:block;opacity:.22;top:calc(100% - var(--pbp) * 2)}
 /* shading and light on the glass: plain alpha, no blend modes */
 .bt::before{mix-blend-mode:normal;background:
   linear-gradient(90deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 42%,rgba(28,10,0,.46) 66%,rgba(20,6,0,.66) 100%),
@@ -102,9 +108,6 @@
 .themes button{appearance:none;border:1px solid rgba(255,255,255,.3);background:rgba(14,10,8,.42);color:rgba(255,244,222,.96);font:500 12.5px/1 var(--f-body);padding:7px 10px;border-radius:999px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
 .themes button:hover{background:rgba(14,10,8,.6)}
 .themes button[aria-pressed=true]{background:var(--amber);border-color:var(--amber);color:#1b1304}
-.themes .fxb{margin-left:4px;border-style:dashed}
-.themes .fxb[aria-pressed=true]{background:rgba(14,10,8,.5);border-style:solid;border-color:var(--amber);color:#ffd66b}
-.themes .fxb[aria-pressed=true]:hover{background:rgba(14,10,8,.68)}
 .hero.swap .sky,.hero.swap .fgC{opacity:0}
 .fgC{transition:opacity .2s ease}
 /* low-power and paused states */
@@ -115,8 +118,8 @@ html[data-fx=lite] .bt::after{opacity:.6}
 .hero.off *,.hero.off *::before,.hero.off *::after{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){.hero *,.hero *::before,.hero *::after{animation:none!important}.fx{display:none!important}.pt .bt,.pt .gw,.pt::before,.pt::after,.pt .tag,.pt .dot,.pt .stem{transition:none}}
 @media (max-width:980px){.bar{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(22,14,8,.84)}.hero{--th:150px}.hero-grid>div:first-child{align-self:auto}.sky .vig{background:var(--vigm,var(--vig))}}
-@media (max-width:700px){.sky .fgb{display:none}.fgC{--fw:104vw;right:-2%}.sky .cl{animation:none}.fx-snow i:nth-child(n+15){display:none}.fx-leaves svg:nth-child(n+6){display:none}.sky .garland,.sky .gl{left:-3%;width:162%}.themes{max-width:none}}
-@media (max-width:560px){.hero{--th:120px;--fh:calc(var(--th) * .45)}.fgC{--fgb:34px}.sky .sun{left:62%}.sky .bloom{display:none}.beams{display:none}.fx-fly i:nth-child(n+6){display:none}.themes .fxb{margin-left:0}}
+@media (max-width:700px){.sky .fgb{display:none}.fgC{--fw:104vw;right:-2%}.sky .cl{animation:none}.fx-snow i:nth-child(n+15){display:none}.fx-leaves svg:nth-child(n+6){display:none}.fx-petals svg:nth-child(n+8){display:none}.sky .garland,.sky .gl{left:-3%;width:162%}.themes{max-width:none}}
+@media (max-width:560px){.hero{--th:120px;--fh:calc(var(--th) * .45)}.fgC{--fgb:34px}.sky .sun{left:62%}.sky .bloom{display:none}.beams{display:none}.fx-fly i:nth-child(n+6){display:none}}
 /* closed cart drawer must not paint anything (Safari can draw it as a square) */
 .drawer{visibility:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s linear .3s}
 body.cart-open .drawer{visibility:visible;transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s}

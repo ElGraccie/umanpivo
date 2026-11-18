@@ -16,7 +16,8 @@ def rd(name):
     return open(f'{SRC}/{name}', encoding='utf-8').read()
 
 THEMES = {
-    'classic': {'n': 'Звичайна', 'l': 'sun far mid fga fgb bok table tshade branch'},
+    'spring':  {'n': 'Весна',    'l': 'sun far mid fga fgb bok table tshade branch'},
+    'classic': {'n': 'Літо', 'l': 'sun far mid fga fgb bok table tshade branch'},
     'autumn':  {'n': 'Осінь',    'l': 'sun far mid fga fgb bok table tshade branch'},
     'winter':  {'n': 'Зима',     'l': 'sun far mid fga fgb bok table tshade branch'},
     'newyear': {'n': 'Новий рік', 'l': 'sun far mid fga fgb bok table tshade branch garland gl1 gl2 gl3 bgl1 bgl2'},
@@ -39,6 +40,14 @@ def leaves(n=9, seed=34):
     for i in range(n):
         o.append('<svg viewBox="-4 -16 54 32" style="left:%.0f%%;width:%dpx;animation-duration:%ds;animation-delay:-%ds"><path d="M0 0C9 -15 33 -15 46 0C33 15 9 15 0 0Z" fill="%s"/></svg>' % (R.uniform(3, 97), R.uniform(16, 34), R.randint(16, 30), R.randint(0, 28), R.choice(cols)))
     return '<div class="fx fx-leaves">' + ''.join(o) + '</div>'
+
+def petals(n=12, seed=303):
+    """spring: blossom petals drifting down"""
+    R = random.Random(seed); cols = ['#fbe2ea', '#f6c4d4', '#ffffff', '#f2aec4', '#fde9ef']; o = []
+    for i in range(n):
+        o.append('<svg viewBox="-12 -9 24 18" style="left:%.0f%%;width:%dpx;animation-duration:%ds;animation-delay:-%ds"><path d="M-11 0C-7 -9 6 -9 11 -2C7 1 7 3 11 3C5 9 -7 8 -11 0Z" fill="%s"/></svg>' % (
+            R.uniform(2, 98), R.uniform(10, 18), R.randint(14, 26), R.randint(0, 26), R.choice(cols)))
+    return '<div class="fx fx-petals">' + ''.join(o) + '</div>'
 
 def fireflies(n=9, seed=12):
     R = random.Random(seed); o = []
@@ -90,7 +99,7 @@ SKY = ('<div class="sky" aria-hidden="true"><div class="sk"></div><div class="cl
        + st_html + fw_html
        + L('sun', 'sun', 6) + L('far', 'far', 5) + '<div class="haze"></div>' + L('mid', 'mid', 11) + '<div class="fshade"></div><div class="bloom"></div>'
        + L('fgb', 'fgb', 14) + L('fga', 'fga', 18) + L('bok', 'bok', 9)
-       + leaves() + snow() + fireflies()
+       + leaves() + petals() + snow() + fireflies()
        + L('garland', 'garland', 12) + L('gl1', 'gl', 12) + L('gl2', 'gl', 12) + L('gl3', 'gl', 12)
        + '<div class="mist"></div><div class="table">' + L('table', 'tbl') + L('tshade', 'tshade') + '</div>'
        + '<div class="vig"></div></div>')
@@ -100,12 +109,11 @@ KICK = '<p class="kick" id="kick"><svg viewBox="0 0 24 24" aria-hidden="true"><p
 rep('<h1>Пиво, сидр і лимонад <em>з Умані</em></h1>', KICK + '<h1>Пиво, сидр і лимонад <em>з Умані</em></h1>')
 
 SWITCH = ('<div class="themes" role="group" aria-label="Тема оформлення"><span class="th-l">Тема</span>'
-          '<button type="button" data-th="classic">Звичайна</button><button type="button" data-th="autumn">Осінь</button>'
+          '<button type="button" data-th="spring">Весна</button><button type="button" data-th="classic">Літо</button><button type="button" data-th="autumn">Осінь</button>'
           '<button type="button" data-th="winter">Зима</button><button type="button" data-th="newyear">Новий рік</button>'
-          '<button type="button" data-th="auto">Авто</button><button type="button" class="fxb" data-fxb title="Анімація та паралакс">Ефекти</button></div>')
+          '<button type="button" data-th="auto">Авто</button></div>')
 FGC = '<div class="fgC" data-d="22">' + L('branch', '') + L('bgl1', 'bgl') + L('bgl2', 'bgl') + '</div>'
-fav = json.load(open(f'{SRC}/favs.json'))
-js = rd('theme.js').replace('%THEMES%', json.dumps(THEMES, ensure_ascii=False)).replace('%FAV%', json.dumps(fav))
+js = rd('theme.js').replace('%THEMES%', json.dumps(THEMES, ensure_ascii=False))
 rep('<div role="listitem"><b>Магазини</b><span>Щодня з 10:00 до 22:00</span></div>\n      </div>\n    </div>\n    <div class="stage" id="stage"><div class="floor"></div></div>\n  </div>\n</header>',
     '<div role="listitem"><b>Магазини</b><span>Щодня з 10:00 до 22:00</span></div>\n      </div>\n      ' + SWITCH + '\n    </div>\n    <div class="stage" id="stage"><div class="beams"></div></div>\n  </div>\n  ' + FGC + '\n</header>\n<script>' + js + '</script>')
 
@@ -131,12 +139,12 @@ rep('</style>', css + '</style>')
 rep('<div class="market scal">', '<div class="market scal"><div class="sdeco" aria-hidden="true"><i class="d0"></i><i class="d1"></i><i class="d2"></i></div>')
 
 # ------------------------------------------------------------------ head: favicons, early theme
-apple = re.search(r'<link rel="apple-touch-icon"[^>]*>', open(f'{SRC}/fav_links.html').read()).group(0)
-head = ('<link rel="icon" type="image/svg+xml" id="fav-svg" href="%s"><link rel="icon" type="image/png" sizes="32x32" id="fav-png" href="%s">%s'
+head = ('<link rel="icon" href="favicon.ico" sizes="48x48"><link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">'
+        '<link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="theme-color" content="#1b1306">'
         '<script>(function(){var d=document.documentElement,t="classic",p="auto";try{p=localStorage.getItem("up-theme2")||"auto"}catch(e){}'
         'if(p==="auto"){var z=["Europe/Kyiv","Europe/Kiev"],o=null,i;for(i=0;i<z.length&&!o;i++){try{o={};new Intl.DateTimeFormat("en-US",{timeZone:z[i],year:"numeric",month:"numeric",day:"numeric"}).formatToParts(new Date()).forEach(function(q){if(q.type!=="literal")o[q.type]=+q.value});if(!(o.month&&o.day))o=null}catch(e){o=null}}'
-        'if(!o){var n=new Date();o={month:n.getMonth()+1,day:n.getDate()}}var m=o.month,x=o.day;t=((m===12&&x>=30)||(m===1&&x<=5))?"newyear":(m===12||m===1||m===2)?"winter":(m>=9&&m<=11)?"autumn":"classic"}'
-        'else if(/^(classic|autumn|winter|newyear)$/.test(p))t=p;d.setAttribute("data-theme",t)})()</script>') % (fav['classic']['svg'], fav['classic']['png'], apple)
+        'if(!o){var n=new Date();o={month:n.getMonth()+1,day:n.getDate()}}var m=o.month,x=o.day;t=((m===12&&x>=30)||(m===1&&x<=5))?"newyear":(m===12||m===1||m===2)?"winter":(m>=9&&m<=11)?"autumn":(m>=3&&m<=5)?"spring":"classic"}'
+        'else if(/^(spring|classic|autumn|winter|newyear)$/.test(p))t=p;d.setAttribute("data-theme",t)})()</script>')
 rep('<title>Уманьпиво. Концепт сайту</title>', '<title>Уманьпиво. Концепт сайту</title>' + head)
 
 os.makedirs(OUT, exist_ok=True)

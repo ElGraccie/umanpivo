@@ -197,6 +197,9 @@ section{padding:72px 0}
 .buy{display:flex;align-items:end;justify-content:space-between;gap:8px;margin-top:auto;padding-top:14px}
 .price{font:600 20px/1.1 var(--f-display)}
 .price s{font:400 13px var(--f-body);color:var(--ink-2);margin-left:6px}
+/* old price goes under the new one when the card is too narrow for both and the + button (phones) */
+.price{min-width:0}
+@media (max-width:560px){.price s{display:block;margin:3px 0 0}}
 .per{display:block;font:400 13px var(--f-body);color:var(--ink-2);margin-top:3px}
 .add{flex:none;width:44px;height:44px;border-radius:14px;border:0;background:var(--amber);color:#1b1304;display:grid;place-items:center;transition:background .15s,transform .15s}
 .add:hover{background:#f2ae29;transform:scale(1.06)}
@@ -1052,6 +1055,20 @@ document.addEventListener('click',function(e){var g=e.target.closest('[data-go]'
       '<span class="bt" style="--m:url(\''+u+'\')"><i class="gw"></i><i class="cs"></i><img src="'+u+'" alt="'+esc(p.n)+'"><span class="refl"><img src="'+u+'" alt=""></span></span></a>';
   });
   s.insertAdjacentHTML('beforeend',html);
+  /* glow behind the hovered bottle: a sibling layer under all bottles, so it lights the sky, not the neighbours */
+  [].forEach.call(s.querySelectorAll('.pt'),function(pt){
+    var g=document.createElement('i');g.className='pglow';g.setAttribute('style',pt.getAttribute('style'));s.insertBefore(g,s.firstChild.nextSibling);
+    function on(){g.classList.add('on')}function off(){g.classList.remove('on')}
+    pt.addEventListener('pointerenter',on);pt.addEventListener('pointerleave',off);pt.addEventListener('focus',on);pt.addEventListener('blur',off);
+  });
+  /* the product photos keep a transparent strip under the glass (2-7%): measure it so the bottle really stands on the table */
+  [].forEach.call(s.querySelectorAll('.pt'),function(pt){
+    var im=pt.querySelector('.bt>img');
+    function m(){try{var w=56,h=224,c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d');x.drawImage(im,0,0,w,h);
+      var d=x.getImageData(0,0,w,h).data,y,i;for(y=h-1;y>0;y--){for(i=0;i<w;i++)if(d[(y*w+i)*4+3]>90)break;if(i<w)break}
+      pt.style.setProperty('--pbf',((h-1-y)/h).toFixed(3))}catch(e){}}
+    if(im.complete&&im.naturalWidth)m();else im.addEventListener('load',m,{once:true});
+  });
   /* pointer parallax: bottles turn slightly, the highlight slides, the eclipse drifts */
   var hero=document.querySelector('.hero');
   if(hero&&window.matchMedia&&matchMedia('(pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion:reduce)').matches){

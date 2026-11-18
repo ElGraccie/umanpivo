@@ -4,10 +4,9 @@
   if(!hero||!stage)return;
   var LS={get:function(k,d){try{return localStorage.getItem(k)||d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
   var T=%THEMES%;
-  var FAV=%FAV%;
   var imgs={},cur=D.getAttribute('data-theme')||'classic';
   [].forEach.call(hero.querySelectorAll('img[data-l]'),function(i){imgs[i.getAttribute('data-l')]=i});
-  /* seasons follow Kyiv time: autumn 1 Sep, winter 1 Dec, New Year 30 Dec - 5 Jan */
+  /* seasons follow Kyiv time: spring 1 Mar, summer 1 Jun, autumn 1 Sep, winter 1 Dec, New Year 30 Dec - 5 Jan */
   function kyivDate(){
     var z=['Europe/Kyiv','Europe/Kiev'],i,o;
     for(i=0;i<z.length;i++){
@@ -20,15 +19,15 @@
     if((m===12&&x>=30)||(m===1&&x<=5))return 'newyear';
     if(m===12||m===1||m===2)return 'winter';
     if(m>=9&&m<=11)return 'autumn';
+    if(m>=3&&m<=5)return 'spring';
     return 'classic'}
   var pref=LS.get('up-theme2','auto');if(pref!=='auto'&&!T[pref])pref='auto';
   function resolve(p){return p==='auto'?autoTheme():p}
   /* ---- buttons ---- */
-  var btns=[].slice.call(hero.querySelectorAll('[data-th]')),fxb=hero.querySelector('[data-fxb]');
+  var btns=[].slice.call(hero.querySelectorAll('[data-th]'));
   function sync(){
     btns.forEach(function(b){var on=b.getAttribute('data-th')===pref;b.setAttribute('aria-pressed',on?'true':'false');
       if(b.getAttribute('data-th')==='auto')b.title='За датою (Київ), зараз: '+T[autoTheme()].n});
-    if(fxb)fxb.setAttribute('aria-pressed',lite?'false':'true');
   }
   /* ---- layers ---- */
   function load(t,cb){
@@ -48,7 +47,6 @@
       if(im.getAttribute('src')!==u){im.classList.remove('in');im.onload=function(){im.classList.add('in')};im.src=u}
       if(im.complete&&im.naturalWidth)im.classList.add('in');
     });
-    var f=FAV[t];if(f){var a=document.getElementById('fav-svg'),b=document.getElementById('fav-png');if(a)a.href=f.svg;if(b)b.href=f.png}
     cur=t;
   }
   function apply(p,first){
@@ -62,7 +60,8 @@
   }
   btns.forEach(function(b){b.addEventListener('click',function(){apply(b.getAttribute('data-th'))})});
   /* ---- effects: full / lite ---- */
-  var fxPref=LS.get('up-fx','auto'),lite=false;
+  /* no switch any more: lite mode only for reduced motion / weak devices (an old saved choice is ignored) */
+  var fxPref=LS.get('up-fx-test','auto'),lite=false;
   function calcLite(){
     if(fxPref==='off')return true;
     if(fxPref==='on')return false;
@@ -70,7 +69,6 @@
     return !!((window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)||c.saveData||(navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2))
   }
   function setFx(){lite=calcLite();D.setAttribute('data-fx',lite?'lite':'full');sync();if(lite)reset()}
-  if(fxb)fxb.addEventListener('click',function(){fxPref=lite?'on':'off';LS.set('up-fx',fxPref);setFx()});
   /* ---- pointer parallax: one rAF loop, transforms only, stops when settled ---- */
   var layers=[].map.call(hero.querySelectorAll('[data-d]'),function(el){return{el:el,d:parseFloat(el.getAttribute('data-d'))||0}});
   var fine=window.matchMedia&&matchMedia('(pointer:fine)').matches;

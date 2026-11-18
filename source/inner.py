@@ -40,6 +40,16 @@ def bauble():
             '<path d="M-13 3Q0 10 13 3"/>')
 
 
+def flower():
+    p = ''.join('<ellipse cx="0" cy="-11" rx="7.5" ry="10" transform="rotate(%d)"/>' % (k * 72) for k in range(5))
+    return p + '<circle r="3.4"/>'
+
+
+def sprig():
+    return ('<path d="M-22 18C-8 8 6 -2 22 -18"/><path d="M-6 6C-10 -4 -4 -10 2 -8C2 -2 -2 4 -6 6Z"/><path d="M8 -6C14 -14 22 -12 22 -6C16 -4 12 -4 8 -6Z"/>'
+            '<path d="M-14 12C-18 20 -12 26 -6 24C-6 18 -10 14 -14 12Z"/>')
+
+
 def fir():
     n = 'M0 -30V32'
     for y, w in ((-22, 9), (-13, 12), (-4, 14), (6, 12), (16, 9)):
@@ -59,6 +69,8 @@ def tile(groups, sw=1.6):
 
 
 PAT = {
+    'spring': q(tile([('#b35c7e', '.2', [(flower(), 58, 62, 10, 1), (flower(), 196, 46, 30, .62), (flower(), 112, 132, 0, .5), (flower(), 186, 182, 18, .8)]),
+                      ('#6a8a44', '.2', [(sprig(), 44, 190, -10, .9), (sprig(), 150, 76, 40, .7)])])),
     'autumn': q(tile([('#8a4a1c', '.21', [(maple(), 56, 62, -20, 1), (leaf(), 176, 150, 28, .95), (maple(), 196, 44, 24, .62), (leaf(), 44, 190, -30, .72)])])),
     'winter': q(tile([('#4f7088', '.24', [(snow(24), 58, 62, 8, 1), (snow(22), 178, 150, 30, .92), (snow(20), 198, 44, 0, .62), (snow(20), 44, 190, 18, .7)]),
                       ('#4f7088', '.26', [('<circle r="1.8" fill="#4f7088"/>', x, y, 0, 1) for x, y in ((118, 36), (124, 118), (22, 118), (110, 214), (226, 110), (152, 70), (84, 150))])])),
@@ -66,6 +78,35 @@ PAT = {
                        ('#8b2f3b', '.24', [(bauble(), 176, 150, 12, .9), (fir(), 44, 190, -26, .78)]),
                        ('#4f7088', '.22', [(snow(20), 122, 214, 10, .6)])])),
 }
+
+# New Year: the shop part (bestsellers + catalogue) is a night-blue ground like the hero, the cards stay light
+PAT_NIGHT = q(tile([('#e8c46a', '.16', [(spark(), 58, 62, 0, 1.05), (spark(), 196, 46, 0, .6), (spark(), 112, 130, 0, .5)]),
+                    ('#e58a96', '.1', [(bauble(), 176, 150, 12, .9), (fir(), 44, 190, -26, .78)]),
+                    ('#9fb8e8', '.12', [(snow(20), 122, 214, 10, .6)])]))
+
+
+def night_market():
+    s = 'html[data-theme=newyear]'
+    tx, sub, glass, edge = '#f4ead6', '#aeb8d8', 'rgba(255,255,255,.07)', 'rgba(255,255,255,.15)'
+    r = [
+        '%s{--sand:#0c1431}' % s,
+        '%s .market{background:%s,linear-gradient(180deg,#0c1431 0%%,#111c44 55%%,#0c1431 100%%);background-size:240px 240px,auto}' % (s, PAT_NIGHT),
+        '%s .market .card{color:var(--ink)}' % s,
+        '%s .market .sec-h h2{color:%s}%s .market .sec-h p,%s .market .note,%s .market .empty{color:%s}' % (s, tx, s, s, s, sub),
+        # glass panels go dark
+        '%s .market .dlv,%s .market .fbar{background:%s;border-color:%s;box-shadow:0 18px 36px -26px rgba(0,0,0,.8)}' % (s, s, glass, edge),
+        '%s .market .dopt{color:%s}%s .market .dopt small{color:%s}%s .market .dopt i{background:rgba(255,255,255,.1)}%s .market .dopt:hover{background:rgba(255,255,255,.07)}' % (s, tx, s, sub, s, s),
+        '%s .market .dopt[aria-pressed="true"]{background:%s;color:#0c1431}%s .market .dopt[aria-pressed="true"] small{color:#4a5578}' % (s, tx, s),
+        '%s .market .dinfo{color:%s}%s .market .dinfo b{color:%s}' % (s, sub, s, tx),
+        '%s .market .tabs .tab{background:%s;border-color:%s;color:%s;box-shadow:0 14px 28px -22px rgba(0,0,0,.8)}%s .market .tabs .tab:hover{background:rgba(255,255,255,.12)}' % (s, glass, edge, tx, s),
+        '%s .market .tabs .tt small{color:%s}' % (s, sub),
+        '%s .market .tabs .tab[aria-selected="true"]{background:#ffc72c;border-color:#ffc72c;color:#1b1304}%s .market .tabs .tab[aria-selected="true"] .tt small{color:#5a4410}%s .market .tabs .tab[aria-selected="true"] .ti{box-shadow:0 0 0 2px #fff4d6}' % (s, s, s),
+        '%s .market .fbar .chips>label,%s .market .fbar .sortg>label{color:%s}' % (s, s, tx),
+        '%s .market .fbar .chip{border-color:transparent}%s .market .fbar .chip[aria-pressed="true"]{background:#ffc72c;border-color:#ffc72c;color:#1b1304}' % (s, s),
+        '%s .market .card{box-shadow:0 18px 36px -24px rgba(0,0,0,.85)}' % s,
+    ]
+    return '\n'.join(r)
+
 
 # scalloped edge, shape only: colour comes from the CSS (mask)
 SCAL = q("<svg xmlns='http://www.w3.org/2000/svg' width='260' height='30' viewBox='0 0 260 30'><g fill='#000'><rect width='260' height='8'/>"
@@ -93,6 +134,22 @@ def leaves_strip():
              (548, 22, -42, .66, '#d9772b', 'leaf'), (638, 40, 32, .8, '#c8481f', 'leaf')]
     g = ''.join('<g transform="translate(%d %d) rotate(%d) scale(%s)">%s</g>' % (x, y, r, s, leaf_fill(c, '#5a2a0e', k)) for x, y, r, s, c, k in items)
     return q("<svg xmlns='http://www.w3.org/2000/svg' width='720' height='84' viewBox='0 0 720 84'>%s</svg>" % g)
+
+
+def blossom_strip():
+    def fl(col):
+        p = ''.join('<ellipse cx="0" cy="-10" rx="7" ry="9.5" transform="rotate(%d)" fill="%s" stroke="#b35c7e" stroke-opacity=".35" stroke-width="1"/>' % (k * 72, col) for k in range(5))
+        return p + '<circle r="3.6" fill="#f2c94c"/>'
+    def lf(col):
+        return '<path d="M0 -14C9 -8 9 6 0 14C-9 6 -9 -8 0 -14Z" fill="%s"/><path d="M0 -14V14" stroke="#4d6a2c" stroke-opacity=".5" stroke-width="1"/>' % col
+    items = [(30, 26, 0, 1, 'f'), (72, 44, 40, .9, 'l'), (112, 30, 20, .8, 'f'), (168, 46, 10, 1.1, 'f'), (214, 26, -30, .9, 'l'), (262, 34, 30, .9, 'f'),
+             (318, 22, 0, .7, 'f'), (366, 44, 60, .9, 'l'), (410, 30, 12, 1.05, 'f'), (462, 46, 24, .8, 'f'), (512, 24, -40, .9, 'l'), (560, 36, 8, 1, 'f'),
+             (612, 22, 30, .75, 'f'), (660, 42, -20, .9, 'l'), (700, 30, 18, .9, 'f')]
+    cols = ['#f8d3df', '#fde9ef', '#f2b3c8', '#ffffff']
+    g = ''
+    for i, (x, y, r, sc, k) in enumerate(items):
+        g += '<g transform="translate(%d %d) rotate(%d) scale(%s)">%s</g>' % (x, y, r, sc, fl(cols[i % 4]) if k == 'f' else lf(['#8fbf5a', '#a8cf6c'][i % 2]))
+    return q("<svg xmlns='http://www.w3.org/2000/svg' width='720' height='72' viewBox='0 0 720 72'>%s</svg>" % g)
 
 
 def icicles_strip():
@@ -143,6 +200,11 @@ def garland_parts():
 
 # ------------------------------------------------------------------ per-season parameters
 SEASONS = {
+    'spring': dict(
+        deep='#1f1520', sand='#f8eef0', hop='#a8456e', lines='#241724 0%,#33213a 50%,#1f1520 100%',
+        orb=('rgba(244,150,190,.32)', 'rgba(150,200,110,.24)', 'rgba(255,214,140,.26)'),
+        paper='#f3dce4', about=('#f2e4e8', '#e8d0d8'), visit=('#f8eef0', '#f9f2f3'),
+        deepglow=('rgba(244,150,190,.18)', 'rgba(120,170,90,.2)'), footer='#1d141d', hover='168,69,110,.36'),
     'autumn': dict(
         deep='#130d08', sand='#f1dcb6', hop='#8a4a1c', lines='#1a110a 0%,#26190f 50%,#130d08 100%',
         orb=('rgba(240,140,40,.34)', 'rgba(190,70,40,.30)', 'rgba(230,170,40,.30)'),
@@ -184,9 +246,12 @@ def css():
         out.append('%s footer{background:%s}' % (s, p['footer']))
         out.append('%s .tabs .tab[aria-selected="true"]{background:var(--deep);border-color:var(--deep)}' % s)
         out.append('%s .card:hover{box-shadow:0 18px 36px -22px rgba(%s)}' % (s, p['hover']))
+    out.append(night_market())
     leaves = leaves_strip()
     ice = icicles_strip()
     g0, g1, g2 = garland_parts()
+    out.append('html[data-theme=spring] .sdeco{display:block;top:-10px;height:72px;z-index:3}')
+    out.append('html[data-theme=spring] .sdeco .d0{background-image:%s;background-size:720px 72px}' % blossom_strip())
     out.append('html[data-theme=autumn] .sdeco{display:block;top:-12px;height:84px;z-index:3}')
     out.append('html[data-theme=autumn] .sdeco .d0{background-image:%s;background-size:720px 84px}' % leaves)
     out.append('html[data-theme=winter] .sdeco{display:block;top:14px;height:72px;z-index:1}')
