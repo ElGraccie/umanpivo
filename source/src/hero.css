@@ -57,8 +57,12 @@
 .pt::before,.pt::after{content:"";position:absolute;pointer-events:none;border-radius:50%;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s}
 .pt::before{left:50%;bottom:-7px;width:calc(var(--h) * var(--k) * var(--ar,.3) * 1.05);height:15px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(8,3,0,.95) 0,rgba(8,3,0,.55) 55%,rgba(8,3,0,0) 74%);z-index:-1}
 .pt::after{left:calc(50% + var(--sx,0px) * 2.4);bottom:-16px;width:calc(var(--h) * var(--k) * var(--ar,.3) * 2.8);height:34px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(10,4,0,.6) 0,rgba(10,4,0,.28) 50%,rgba(10,4,0,0) 72%);z-index:-2}
-.pt .bt{transition:transform .45s cubic-bezier(.2,.8,.2,1),filter .45s;filter:drop-shadow(0 0 14px rgba(var(--glow),.5)) drop-shadow(0 0 0 rgba(0,0,0,0))}
-.pt:hover .bt,.pt:focus-visible .bt{transform:translateY(-38px) translateX(calc(var(--px,0) * var(--d,6) * 1px)) rotateY(calc(var(--px,0) * 7deg));filter:drop-shadow(0 0 24px rgba(var(--glow),.75)) drop-shadow(0 26px 16px rgba(0,0,0,.32))}
+.pt .bt{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+/* glow behind a bottle: a gradient, not a CSS filter. A filter on an element that is below the first screen makes iOS 26.4 Safari
+   (and Safari 26.4 on macOS) paint a black square in the corner of the page (WebKit bug 314999); on a phone the bottles start below the first screen. */
+.pt .gw{display:block;position:absolute;inset:-5% -55%;z-index:-1;pointer-events:none;border-radius:50%;opacity:.8;transition:opacity .45s,transform .45s cubic-bezier(.2,.8,.2,1);background:radial-gradient(closest-side,rgba(var(--glow),.36) 0,rgba(var(--glow),.27) 24%,rgba(var(--glow),.14) 52%,rgba(var(--glow),.05) 78%,rgba(var(--glow),0) 100%)}
+.pt:hover .gw,.pt:focus-visible .gw{opacity:1;transform:scale(1.1)}
+.pt:hover .bt,.pt:focus-visible .bt{transform:translateY(-38px) translateX(calc(var(--px,0) * var(--d,6) * 1px)) rotateY(calc(var(--px,0) * 7deg))}
 .pt:hover::before,.pt:focus-visible::before{transform:translateX(-50%) scale(.62);opacity:.55}
 .pt:hover::after,.pt:focus-visible::after{transform:translateX(-50%) scale(.72);opacity:.4}
 .pt .tag,.pt .dot,.pt .stem{transition:transform .45s cubic-bezier(.2,.8,.2,1)}
@@ -75,7 +79,7 @@
   linear-gradient(90deg,transparent 24%,rgba(255,176,70,.5) 30%,transparent 40%),
   linear-gradient(180deg,rgba(255,236,190,.4),transparent 20%)}
 /* cold-bottle condensation */
-.bt .cs{display:block;position:absolute;inset:0;left:0;bottom:auto;top:0;width:100%;height:100%;transform:none;filter:none;z-index:2;opacity:.45;pointer-events:none;
+.bt .cs{display:block;position:absolute;inset:0;left:0;bottom:auto;top:0;width:100%;height:100%;transform:none;z-index:2;opacity:.45;pointer-events:none;
   -webkit-mask-image:var(--m);mask-image:var(--m);-webkit-mask-size:100% 100%;mask-size:100% 100%;background:%DROPS%}
 .beams{position:absolute;left:-14%;right:-6%;top:-4%;bottom:-8%;z-index:0;pointer-events:none;background:
     linear-gradient(122deg,transparent 4%,rgba(var(--beam),.2) 9%,rgba(var(--beam),.2) 15%,transparent 20%),
@@ -106,10 +110,10 @@
 /* low-power and paused states */
 html[data-fx=lite] .hero *,html[data-fx=lite] .hero *::before,html[data-fx=lite] .hero *::after{animation:none!important}
 html[data-fx=lite] .fx{display:none!important}
-html[data-fx=lite] .pt .bt{filter:none}
+html[data-fx=lite] .pt .gw{display:none}
 html[data-fx=lite] .bt::after{opacity:.6}
 .hero.off *,.hero.off *::before,.hero.off *::after{animation-play-state:paused!important}
-@media (prefers-reduced-motion:reduce){.hero *,.hero *::before,.hero *::after{animation:none!important}.fx{display:none!important}.pt .bt,.pt::before,.pt::after,.pt .tag,.pt .dot,.pt .stem{transition:none}}
+@media (prefers-reduced-motion:reduce){.hero *,.hero *::before,.hero *::after{animation:none!important}.fx{display:none!important}.pt .bt,.pt .gw,.pt::before,.pt::after,.pt .tag,.pt .dot,.pt .stem{transition:none}}
 @media (max-width:980px){.bar{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(22,14,8,.84)}.hero{--th:150px}.hero-grid>div:first-child{align-self:auto}.sky .vig{background:var(--vigm,var(--vig))}}
 @media (max-width:700px){.sky .fgb{display:none}.fgC{--fw:104vw;right:-2%}.sky .cl{animation:none}.fx-snow i:nth-child(n+15){display:none}.fx-leaves svg:nth-child(n+6){display:none}.sky .garland,.sky .gl{left:-3%;width:162%}.themes{max-width:none}}
 @media (max-width:560px){.hero{--th:120px;--fh:calc(var(--th) * .45)}.fgC{--fgb:34px}.sky .sun{left:62%}.sky .bloom{display:none}.beams{display:none}.fx-fly i:nth-child(n+6){display:none}.themes .fxb{margin-left:0}}

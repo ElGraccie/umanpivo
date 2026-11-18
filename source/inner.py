@@ -2,6 +2,7 @@
 decorative strip above the catalogue (autumn leaves / winter icicles / New Year garland).
 Everything is CSS + tiny inline SVG tiles, no extra requests, nothing animated except the garland twinkle."""
 import math, urllib.parse, random
+import glow
 
 
 def q(svg):
@@ -172,7 +173,8 @@ def css():
         hf = ','.join(str(int(first[i:i + 2], 16)) for i in (0, 2, 4))
         out.append('%s{--deep:%s;--sand:%s;--hop:%s;--hf:%s}' % (s, p['deep'], p['sand'], p['hop'], hf))
         out.append('%s .lines-sec{background:linear-gradient(180deg,%s)}' % (s, p['lines']))
-        out.append('%s .lines-sec .a{background:%s}%s .lines-sec .b{background:%s}%s .lines-sec .c{background:%s}' % (s, p['orb'][0], s, p['orb'][1], s, p['orb'][2]))
+        # the orbs are gradients (no CSS filter, see glow.py); geometry is in the base page, only the colour changes per season
+        out.append(''.join('%s .lines-sec .%s{background:%s}' % (s, k, glow.orb(k, c)) for k, c in zip('abc', p['orb'])))
         out.append('%s .market{background:%s,linear-gradient(180deg,%s 0%%,%s 55%%,%s 100%%);background-size:240px 240px,auto}' % (s, PAT[th], p['sand'], p['paper'], p['sand']))
         out.append('%s .about-sec{background:%s,linear-gradient(180deg,%s 0%%,%s 100%%);background-size:240px 240px,auto}' % (s, PAT[th], p['about'][0], p['about'][1]))
         out.append('%s .visit-sec{background:%s,linear-gradient(180deg,%s 0%%,%s 100%%);background-size:240px 240px,auto}' % (s, PAT[th], p['visit'][0], p['visit'][1]))
