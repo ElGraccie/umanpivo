@@ -153,9 +153,41 @@ rep('<title>Уманьпиво. Концепт сайту</title>', '<title>Ум
 # python3 source/build_site.py                -> demo: watermark ДЕМО over the whole page, badge, noindex  -> <repo>/index.html
 # python3 source/build_site.py --clean FILE   -> clean site for the client after payment (keep it out of the public repo)
 CLEAN = '--clean' in sys.argv
+
+# ------------------------------------------------------------------ search engines and link previews
+# title + description for Google, Open Graph for Telegram/Viber/Facebook, schema.org data about the brewery.
+# The demo stays out of Google (noindex) but keeps the previews, so a sent link looks right in a messenger.
+import html as _h, datetime
+SITE = sys.argv[sys.argv.index('--site') + 1] if '--site' in sys.argv else ('https://umanpivo.ua/' if CLEAN else 'https://elgraccie.github.io/umanpivo/')
+SITE = SITE.rstrip('/') + '/'
+TITLE = 'Уманьпиво — пиво, сидр і лимонад з Умані з доставкою'
+DESC = ('Пиво, сидри, лимонади й квас від пивоварні з Умані, що працює з 1878 року. '
+        'Замовляйте онлайн: Новою поштою по Україні, по Умані доставка безкоштовна.')
+OG_DESC = 'Пивоварня з Умані з 1878 року. Пиво, сидри, лимонади й квас, свій BeerBox і доставка по всій Україні.'
+assert len(DESC) <= 165, len(DESC)
+SOC = sorted(set(re.findall(r'href="(https://(?:www\.)?(?:instagram\.com|facebook\.com|tiktok\.com|youtube\.com)/[^"]+)"', s)))
+STORES = [('Уманьпиво №1', 'вул. Успенська, 29'), ('Уманьпиво «Дюна»', 'вул. Тищика, 1')]
+ld = {'@context': 'https://schema.org', '@graph': [
+    {'@type': 'Brewery', '@id': SITE + '#brewery', 'name': 'Уманьпиво', 'url': SITE, 'logo': SITE + 'icon-192.png', 'image': SITE + 'og-image.jpg',
+     'description': DESC, 'foundingDate': '1878', 'telephone': '+380800330909', 'priceRange': '₴',
+     'address': {'@type': 'PostalAddress', 'addressLocality': 'Умань', 'addressRegion': 'Черкаська область', 'addressCountry': 'UA'},
+     'areaServed': {'@type': 'Country', 'name': 'Україна'}, 'sameAs': SOC,
+     'department': [{'@type': 'Store', 'name': n, 'telephone': '+380800330909', 'openingHours': 'Mo-Su 10:00-22:00',
+                     'address': {'@type': 'PostalAddress', 'streetAddress': a, 'addressLocality': 'Умань', 'addressRegion': 'Черкаська область', 'addressCountry': 'UA'}} for n, a in STORES]},
+    {'@type': 'WebSite', '@id': SITE + '#website', 'url': SITE, 'name': 'Уманьпиво', 'inLanguage': 'uk', 'publisher': {'@id': SITE + '#brewery'}}]}
+a = lambda x: _h.escape(x, quote=True)
+seo = ('<meta name="description" content="%s">' % a(DESC)
+       + ('<link rel="canonical" href="%s"><meta name="robots" content="index,follow,max-image-preview:large">' % a(SITE) if CLEAN else '<meta name="robots" content="noindex,nofollow">')
+       + '<meta property="og:type" content="website"><meta property="og:site_name" content="Уманьпиво"><meta property="og:locale" content="uk_UA">'
+       + '<meta property="og:title" content="%s"><meta property="og:description" content="%s"><meta property="og:url" content="%s">' % (a(TITLE), a(OG_DESC), a(SITE))
+       + '<meta property="og:image" content="%sog-image.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">' % a(SITE)
+       + '<meta property="og:image:alt" content="Уманьпиво: пиво, сидр і лимонад з Умані">'
+       + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="%s"><meta name="twitter:description" content="%s"><meta name="twitter:image" content="%sog-image.jpg">' % (a(TITLE), a(OG_DESC), a(SITE))
+       + '<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/'))
+rep('<title>Уманьпиво. Концепт сайту</title>', '<title>%s%s</title>' % ('' if CLEAN else 'Демо · ', a(TITLE)) + seo)
+
 if not CLEAN:
     import base64
-    rep('<title>Уманьпиво. Концепт сайту</title>', '<title>Демо · Уманьпиво. Концепт сайту</title><meta name="robots" content="noindex,nofollow">')
     rep('<span>Це концепт редизайну.', '<span>Демо-версія сайту, підготовлена для ТОВ «Уманьпиво».</span>\n      <span>Це концепт редизайну.')
     rep('</style>', '/* demo badge */\n.demo{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:55;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;'
         'background:rgba(20,14,8,.82);border:1px solid rgba(255,255,255,.16);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 11px/1 var(--f-body,system-ui);letter-spacing:.14em;text-transform:uppercase;color:#ffd66b;pointer-events:none}'
@@ -197,6 +229,15 @@ else:
                      '.demo i{width:8px;height:8px;border-radius:50%;background:#ffc72c;box-shadow:0 0 0 3px rgba(255,199,44,.25)}.msg{padding-bottom:92px}')
             .replace('%DEMO_BODY%', '<div class="demo" role="note"><i></i>Демо-версія</div>\n' + DEMO_SCRIPT))
 assert '%' + 'TITLE%' not in page and '%DEMO' not in page
-open(os.path.join(os.path.dirname(os.path.abspath(dest)), '404.html'), 'w', encoding='utf-8').write(page)
+outdir = os.path.dirname(os.path.abspath(dest))
+open(os.path.join(outdir, '404.html'), 'w', encoding='utf-8').write(page)
+# the share picture (made by source/layers/og_image.py) travels with the page
+og = os.path.join(OUT, 'og-image.jpg')
+if os.path.exists(og) and os.path.abspath(og) != os.path.join(outdir, 'og-image.jpg'):
+    import shutil; shutil.copyfile(og, os.path.join(outdir, 'og-image.jpg'))
+if CLEAN:   # robots.txt and sitemap.xml only for the real domain (on github.io/umanpivo/ they would not be read anyway)
+    open(os.path.join(outdir, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\n\nSitemap: %ssitemap.xml\n' % SITE)
+    open(os.path.join(outdir, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        '  <url><loc>%s</loc><lastmod>%s</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>\n</urlset>\n' % (SITE, datetime.date.today().isoformat()))
 
 print('built', 'CLEAN' if CLEAN else 'DEMO', dest, '+ 404.html (%d KB)' % (len(page) // 1024), len(s) // 1024, 'KB;', {t: len(v['l'].split()) for t, v in THEMES.items()})
